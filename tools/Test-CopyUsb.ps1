@@ -15,7 +15,8 @@ $manifest=@(Get-ChildItem -LiteralPath $source -Recurse -File|ForEach-Object {
 $manifest|Set-Content -LiteralPath (Join-Path $source 'SHA256SUMS.txt') -Encoding ASCII
 $letter=@('U','V','W','Y','Z')|Where-Object {!(Get-PSDrive $_ -ErrorAction SilentlyContinue)}|Select-Object -First 1
 if(!$letter){throw 'No free mock drive name'}
-New-PSDrive -Name $letter -PSProvider FileSystem -Root $drive|Out-Null
+# Utility modules may resolve drives in global scope on CI; remove it in finally.
+New-PSDrive -Name $letter -PSProvider FileSystem -Root $drive -Scope Global|Out-Null
 $env:GPU_UNLOCK_TEST_BUS='USB'
 function Get-Partition {param($DriveLetter) [pscustomobject]@{DiskNumber=99;IsBoot=$false;IsSystem=$false}}
 function Get-Disk {param($Number) [pscustomobject]@{Number=99;BusType=$env:GPU_UNLOCK_TEST_BUS;IsBoot=$false;IsSystem=$false;FriendlyName='MOCK FILESYSTEM ONLY'}}
