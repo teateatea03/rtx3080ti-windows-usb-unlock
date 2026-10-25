@@ -23,14 +23,14 @@
       "simulated_scenarios": 122,
       "all_passed": true,
       "public_log": "evidence\\host-122.txt",
-      "public_log_sha256_lf": "13e27aa2449847fbbcb73b6f4243d787ee0f23695f8fa98921daa5b451335469"
+      "public_log_sha256_lf": "99d88e26cc45513861719218102f5e11d70d544fd6b664f22729bb096bb8d422"
     },
     {
       "mode": "pny3080ti-dynamic-ss0",
       "simulated_scenarios": 221,
       "all_passed": true,
       "public_log": "evidence\\host-221.txt",
-      "public_log_sha256_lf": "8bd0108d075b2c2b7c5b432175618ae3ff4899749181f9db069846762db01573"
+      "public_log_sha256_lf": "38528ee24c378439e9d722055a602933a4fdc6262443c19a3a32e2458726fc86"
     }
   ],
   "generic_regression_groups": 9,

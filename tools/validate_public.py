@@ -70,6 +70,9 @@ def main():
     for run in (1, 2, 3):
         refused = (ROOT / f"evidence/rejected-run0{run}.txt").read_text()
         assert "stage=diagnostic-cold-state attempted=0 driver_release=0 clean=1" in refused
+    validation = json.loads((ROOT / "evidence/publication-v020.json").read_text())
+    for suite in validation["full_host_suites"]:
+        assert text_hash(ROOT / suite["public_log"]) == suite["public_log_sha256_lf"]
     sys.path.insert(0, str(ROOT / "tools/firmware"))
     import generate_v67
     assert hashlib.sha256(generate_v67.build_payload()).hexdigest() == generate_v67.PAYLOAD_SHA256
