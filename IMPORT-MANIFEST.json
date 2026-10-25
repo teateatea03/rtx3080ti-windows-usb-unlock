@@ -6,7 +6,7 @@
       "path": "src/app.c",
       "input_sha256": "0be1c50d5092acd41c91206203e46c5ea037ca60838dff746b3f7efbe4324c9d",
       "output_sha256": "0be1c50d5092acd41c91206203e46c5ea037ca60838dff746b3f7efbe4324c9d",
-      "public_sha256_lf": "818ea2638fcd77fa8ec1125b57e92c3759626abe52fb78368f3f0f2e7df71a34"
+      "public_sha256_lf": "6c65cdf0a2a244418a0dd5460e324e4811e06bd74cbbdec0c2980b7bcdd1a5c6"
     },
     {
       "path": "src/app.h",
@@ -78,7 +78,7 @@
       "path": "src/pny-policy.h",
       "input_sha256": "44775adc1573c7c4e1b8163725364772201245268ce6191be340ef390895d0bc",
       "output_sha256": "44775adc1573c7c4e1b8163725364772201245268ce6191be340ef390895d0bc",
-      "public_sha256_lf": "d8a16a71cd09f627fdcb18421a3e21a3651d18a5a6016f03a458610fca23c97a"
+      "public_sha256_lf": "9745c3e72b137a373102ab3d5ffe98594925fd0f1b7026d2b7a1cd25e4b6a191"
     },
     {
       "path": "src/port.c",
@@ -90,7 +90,7 @@
       "path": "src/port.h",
       "input_sha256": "c6d2af12aacb1eee94dcd4c902534248da772aa3c6d235f98c33f519b29726e6",
       "output_sha256": "c6d2af12aacb1eee94dcd4c902534248da772aa3c6d235f98c33f519b29726e6",
-      "public_sha256_lf": "177c4076c16d1ef24d18578e053f48e17df2441a6f5dbb8e2f0c299b204786b5"
+      "public_sha256_lf": "2fd259d8df3d80eddc61421006ac614760221c5a20dd2b56bb4a97ed29dee447"
     },
     {
       "path": "src/runtime.c",
@@ -4116,7 +4116,7 @@
       "path": "src/tests/test_pny.c",
       "input_sha256": "f276162966edf0990e8e0968c51d385cccf40932b2d3a3ae549bfdf5e0b0d0c2",
       "output_sha256": "f276162966edf0990e8e0968c51d385cccf40932b2d3a3ae549bfdf5e0b0d0c2",
-      "public_sha256_lf": "87f106d2c3dbcef00faa76aa47ccff17d04511440e89b7d797b56dfe6462c2eb"
+      "public_sha256_lf": "4bd017c8cefb99a9ddd3a941168d205c401e0498c9a75918a823ba9add650ec3"
     },
     {
       "path": "src/tests/test_app.c",
@@ -4176,7 +4176,7 @@
       "path": "src/tests/test_pny_selection.py",
       "input_sha256": "d47b03363b5a8835e8b7265e8d897c804dd52765fefc8944afa2075b37e82bbd",
       "output_sha256": "56aaf39d644b27ca0b01c30d362cda485898f0bf830c3a7911918f27645642e2",
-      "public_sha256_lf": "56aaf39d644b27ca0b01c30d362cda485898f0bf830c3a7911918f27645642e2"
+      "public_sha256_lf": "b7239c6fb03ce6aa721a3b5654a013c8a0c832dfe7a7775c61a649b51239f304"
     },
     {
       "path": "src/assets.json",
@@ -5307,5 +5307,44 @@
       "public_sha256_lf": "f54c4930f699f3ebeca78652740502ac31754bafd651de603fa101d3ba01336f"
     }
   ],
-  "hash_scope": "input_sha256: private local source bytes; output_sha256: initial export bytes; public_sha256_lf: final public text with CRLF normalized to LF. Input is not asserted pristine upstream."
+  "hash_scope": "input_sha256: private local source bytes; output_sha256: initial export bytes; public_sha256_lf: final public text with CRLF normalized to LF. Input is not asserted pristine upstream.",
+  "local_revision_updates": [
+    {
+      "version": "v0.2.0-experimental",
+      "source_updates": [
+        {
+          "path": "src/app.c",
+          "measured_source_sha256": "d6d65fff981df5e924727a08dc8e135137afda02f8c8b87ff1a1741eb3faa593",
+          "change": "v0.2 dynamic SS0; dated public notice preserves line numbers"
+        },
+        {
+          "path": "src/pny-policy.h",
+          "measured_source_sha256": "d65dce8f1d8bc1d979c6eb9cf801ae045abfc4e68b3f13591efed3500962154b",
+          "change": "v0.2 dynamic SS0; dated public notice preserves line numbers"
+        },
+        {
+          "path": "src/port.h",
+          "measured_source_sha256": "54405aacf54194a236ff8c76da8526058a00888d8f2edb342317ef340894fb95",
+          "change": "v0.2 dynamic SS0; dated public notice preserves line numbers"
+        },
+        {
+          "path": "src/tests/test_pny.c",
+          "measured_source_sha256": "74d8ade22ba5b481f197c0bdde6cc84ab5cb8ecef63f19edc2ec1529bafc0cbc",
+          "change": "v0.2 dynamic SS0; dated public notice preserves line numbers"
+        },
+        {
+          "path": "src/tests/test_pny_selection.py",
+          "measured_source_sha256": "008dfdf83fcea74a7267a36cd44361262ef46389ad5c1a404b1c2e48af587d4a",
+          "change": "v0.2 compile-policy cases; portable include path"
+        }
+      ],
+      "public_hashes_updated": [
+        "src/app.c",
+        "src/pny-policy.h",
+        "src/port.h",
+        "src/tests/test_pny.c",
+        "src/tests/test_pny_selection.py"
+      ]
+    }
+  ]
 }

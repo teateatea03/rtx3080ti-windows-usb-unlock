@@ -7,6 +7,7 @@ import shutil
 
 ROOT = Path(__file__).resolve().parents[1]
 TESTED_EFI = "197602679e4574a5993e5ea6f963e128a7662ccaa1a382c2c2b29838e3a4bb08"
+DYNAMIC_EFI = "0cf96d7ce5b81b87caf463b6ef4a2365b4785fb6d64273ee38a7d9f699e96845"
 PROM = "991cbe4878a4c6f0456b6412ffff3dab5e7f60ec317ba4539254eb52b692f140"
 
 def digest(path):
@@ -19,6 +20,7 @@ def main():
     parser.add_argument("--diagnostic-summary", type=Path, required=True,
                         help="Local v4 Read-Run summary; not a substitute for physical cold boot")
     parser.add_argument("--output", type=Path, required=True, help="New directory under .local")
+    parser.add_argument('--dynamic-entry-ss0', action='store_true', help='Explicit v0.2 dynamic entry latch; all other exact-card guards retained')
     a = parser.parse_args()
     out = a.output.resolve()
     if out.exists() or not out.is_relative_to(ROOT / ".local"):
@@ -30,21 +32,26 @@ def main():
             and summary["PromSha256"].lower() == PROM):
         parser.error("Diagnostic evidence does not match the measured PNY profile")
     regs = {r["Offset"]: r["Value"] for r in summary["Registers"]}
-    if not (regs.get(0x8241e0) == 3 and regs.get(0x823820) == 7
-            and regs.get(0x82381c) in (0x24321116, 0x24321156)):
+    ss0 = regs.get(0x82381c)
+    candidate = isinstance(ss0, int) and 0 <= ss0 <= 0xffffffff and ss0 not in (0xffffffff, 0x88888888) and (ss0 & 0xffff0000) != 0xbadf0000
+    selector_ok = candidate if a.dynamic_entry_ss0 else ss0 in (0x24321116, 0x24321156)
+    if not (regs.get(0x8241e0) == 3 and regs.get(0x824148) == 1 and regs.get(0x823820) == 7 and selector_ok):
         parser.error("Wrong FWSEC or stock selector evidence")
-    build = ROOT / "src/build/pny3080ti/experimental-preserve-ss1"
+    mode = "experimental-dynamic-ss0-preserve-ss1" if a.dynamic_entry_ss0 else "experimental-preserve-ss1"
+    tested_efi = DYNAMIC_EFI if a.dynamic_entry_ss0 else TESTED_EFI
+    build = ROOT / "src/build/pny3080ti" / mode
     efi = build / "PNY3080TI.EFI"
     manifest = json.loads((build / "build-manifest.json").read_text(encoding="utf-8-sig"))
-    if digest(efi) != TESTED_EFI or manifest["EfiSha256"].lower() != TESTED_EFI:
+    if digest(efi) != tested_efi or manifest["EfiSha256"].lower() != tested_efi or bool(manifest.get("DynamicEntrySs0")) != a.dynamic_entry_ss0 or manifest["Mode"] != mode:
         parser.error("Only the reproduced, hardware-tested EFI hash is packaged")
     for source in manifest["Sources"]:
         if digest(ROOT / "src" / source["Name"]) != source["Sha256"].lower():
             parser.error("Source changed since build")
-    tests = ROOT / "src/build/tests/pny3080ti"
+    tests = ROOT / "src/build/tests" / ("pny3080ti-dynamic-ss0" if a.dynamic_entry_ss0 else "pny3080ti")
     result = json.loads((tests / "pny-host-results.json").read_text(encoding="utf-8-sig"))
     logs = [p for p in tests.glob("pny-host-*.log") if digest(p) == result["LogSha256"].lower()]
-    if not result["AllPassed"] or not any("119 PNY actual app/core scenarios passed" in p.read_text(encoding="utf-16" if p.read_bytes().startswith(b"\xff\xfe") else "utf-8-sig") for p in logs):
+    expected_count = 221 if a.dynamic_entry_ss0 else 122
+    if not result["AllPassed"] or bool(result.get("DynamicEntrySs0")) != a.dynamic_entry_ss0 or digest(tests / "pny-tests.exe") != result["TestExeSha256"].lower() or not any(f"{expected_count} PNY actual app/core scenarios passed" in p.read_text(encoding="utf-16" if p.read_bytes().startswith(b"\xff\xfe") else "utf-8-sig") for p in logs):
         parser.error("Run the full fixture tests first")
     assets = json.loads((ROOT / "src/assets.json").read_text())
     for asset in assets:

@@ -1,0 +1,117 @@
+PNY both measured SS0 baselines and immutable per-entry latch PASS
+PNY app success: halted=0 enables=1 disables=1 PASS
+PNY app escape: halted=0 enables=1 disables=1 PASS
+PNY app timeout: halted=0 enables=1 disables=1 PASS
+PNY app old-key: halted=0 enables=1 disables=1 PASS
+PNY app driver-owner: halted=0 enables=0 disables=0 PASS
+PNY app secure-boot: halted=0 enables=0 disables=0 PASS
+PNY app duplicate-target: halted=0 enables=0 disables=0 PASS
+PNY app bad-bar: halted=0 enables=0 disables=0 PASS
+PNY app not-usb: halted=0 enables=0 disables=0 PASS
+PNY app partial-report-write: halted=0 enables=0 disables=0 PASS
+PNY app report-flush: halted=0 enables=0 disables=0 PASS
+PNY app asset-size: halted=0 enables=1 disables=1 PASS
+PNY app asset-hash: halted=0 enables=1 disables=1 PASS
+PNY app prom-hash: halted=0 enables=1 disables=1 PASS
+PNY app watchdog: halted=0 enables=0 disables=0 PASS
+PNY app config-guard: halted=0 enables=0 disables=0 PASS
+PNY app bme-readback: halted=0 enables=1 disables=1 PASS
+PNY app fwsec-timeout: halted=1 enables=1 disables=0 PASS
+PNY app unmap-failure: halted=1 enables=1 disables=0 PASS
+PNY app selector-lost: halted=1 enables=1 disables=0 PASS
+PNY app log-after-start: halted=1 enables=1 disables=0 PASS
+PNY app final-log-failure: halted=1 enables=1 disables=1 PASS
+PNY app report-close-failure: halted=1 enables=1 disables=1 PASS
+PNY app pio-unavailable-no-wpr-retains: halted=1 enables=1 disables=0 PASS
+PNY app pio-unavailable-fwsec-success: halted=0 enables=1 disables=1 PASS
+PNY app fwsec-diagnostic-log-failure: halted=1 enables=1 disables=0 PASS
+PNY app master-enable-error-after-write: halted=0 enables=1 disables=1 PASS
+PNY app master-disable-error-retains: halted=1 enables=1 disables=0 PASS
+PNY guard target-id: halted=0 enables=0 disables=0 PASS
+PNY guard target-bus: halted=0 enables=0 disables=0 PASS
+PNY guard initial-command: halted=0 enables=0 disables=0 PASS
+PNY guard bar-resource: halted=0 enables=0 disables=0 PASS
+PNY guard extra-gpu: halted=0 enables=0 disables=0 PASS
+PNY guard target-gop: halted=0 enables=0 disables=0 PASS
+PNY guard extra-gop: halted=0 enables=0 disables=0 PASS
+PNY guard display-id: halted=0 enables=0 disables=0 PASS
+PNY guard display-bar: halted=0 enables=0 disables=0 PASS
+PNY guard display-command: halted=0 enables=0 disables=0 PASS
+PNY guard missing-text-edge: halted=0 enables=0 disables=0 PASS
+PNY guard duplicate-text-edge: halted=0 enables=0 disables=0 PASS
+PNY guard unsupported-memory: halted=0 enables=0 disables=0 PASS
+PNY guard attributes-get: halted=0 enables=0 disables=0 PASS
+PNY guard dirty-cached-attributes: halted=0 enables=0 disables=0 PASS
+PNY guard warning-status: halted=0 enables=0 disables=0 PASS
+PNY guard enable-noop: halted=0 enables=1 disables=1 PASS
+PNY guard enable-error-after-effect: halted=0 enables=1 disables=1 PASS
+PNY guard enable-extra-bme: halted=1 enables=1 disables=0 PASS
+PNY guard enable-other-config: halted=1 enables=1 disables=1 PASS
+PNY guard disable-error: halted=1 enables=1 disables=1 PASS
+PNY guard restore-other-config: halted=1 enables=1 disables=1 PASS
+PNY guard driver-owner: halted=0 enables=0 disables=0 PASS
+PNY guard missing-self-owner: halted=0 enables=1 disables=1 PASS
+PNY guard extra-self-owner: halted=0 enables=1 disables=1 PASS
+PNY guard read-error: halted=0 enables=1 disables=1 PASS
+PNY guard entry-ss0: halted=0 enables=1 disables=1 PASS
+PNY guard entry-ss1: halted=0 enables=1 disables=1 PASS
+PNY guard wrong-vram: halted=0 enables=1 disables=1 PASS
+PNY guard warm-state: halted=0 enables=1 disables=1 PASS
+PNY guard fwsec-fuse: halted=0 enables=1 disables=1 PASS
+PNY guard late-display: halted=1 enables=1 disables=1 PASS
+PNY guard final-display: halted=1 enables=1 disables=1 PASS
+PNY guard key-ss0: halted=0 enables=1 disables=1 PASS
+PNY guard key-ss1: halted=0 enables=1 disables=1 PASS
+PNY guard decode-intent-log: halted=0 enables=0 disables=0 PASS
+PNY guard decode-restore-log: halted=1 enables=1 disables=1 PASS
+PNY guard attributes-get-after: halted=0 enables=1 disables=1 PASS
+PNY core success: starts=1/1 flr=1 halted=0 PASS
+PNY core fwsec-timeout: starts=1/0 flr=0 halted=1 PASS
+PNY core post-flr-gfw-timeout: starts=1/1 flr=1 halted=1 PASS
+PNY core bme-readback-failure: starts=0/0 flr=0 halted=0 PASS
+PNY core mmio-write-failure: starts=0/0 flr=0 halted=1 PASS
+PNY core flush-failure: starts=0/0 flr=0 halted=1 PASS
+PNY core flr-write-failure: starts=1/1 flr=1 halted=1 PASS
+PNY core unmap-failure: starts=1/1 flr=1 halted=1 PASS
+PNY core map-failure: starts=0/0 flr=0 halted=0 PASS
+PNY core partial-map: starts=0/0 flr=0 halted=0 PASS
+PNY core pci-restore-failure: starts=1/1 flr=1 halted=1 PASS
+PNY core selector-lost: starts=1/1 flr=1 halted=1 PASS
+PNY core fwsec-halted-no-wpr: starts=1/0 flr=0 halted=1 PASS
+PNY core fwsec-running-then-halt: starts=1/1 flr=1 halted=0 PASS
+PNY core fwsec-prestart-snapshot-failure: starts=0/0 flr=0 halted=1 PASS
+PNY core fwsec-posthalt-snapshot-failure: starts=1/0 flr=0 halted=1 PASS
+PNY core pio-unavailable-fwsec-success: starts=1/1 flr=1 halted=0 PASS
+PNY core pio-unavailable-fwsec-no-wpr: starts=1/0 flr=0 halted=1 PASS
+PNY core fwsec-error-code: starts=1/0 flr=0 halted=1 PASS
+PNY core core-entry-ss0: starts=0/0 flr=0 halted=0 PASS
+PNY core core-entry-ss1: starts=0/0 flr=0 halted=0 PASS
+PNY core before-fw-ss0: starts=0/0 flr=0 halted=0 PASS
+PNY core before-fw-ss1: starts=0/0 flr=0 halted=0 PASS
+PNY core selector-entry-ss0: starts=1/1 flr=0 halted=1 PASS
+PNY core selector-entry-ss1: starts=1/1 flr=0 halted=1 PASS
+PNY core pre-flr-ss1: starts=1/1 flr=0 halted=1 PASS
+PNY core late-flr-ss1: starts=1/1 flr=0 halted=1 PASS
+PNY selector SS0 at CHECK stage=diagnostic-cold-state status=0: halted=0 PASS
+PNY selector SS0 at CHECK stage=final-prom status=0: halted=0 PASS
+PNY selector SS0 at ARMED: one transaction: halted=0 PASS
+PNY selector SS0 at entry: plm=: halted=0 PASS
+PNY selector SS0 at selector intent:: halted=1 PASS
+PNY selector SS0 at PCIe FLR begin:: halted=1 PASS
+PNY selector SS0 at Falcon reset begin: base=0x110000: halted=1 PASS
+PNY selector SS0 at Falcon DMA: base=0x110000: halted=1 PASS
+PNY selector SS0 at Falcon reset begin: base=0x840000: halted=1 PASS
+PNY selector SS0 at Falcon DMA: base=0x840000: halted=1 PASS
+PNY selector SS0 at post-FLR SEC2 reset released: halted=1 PASS
+PNY selector SS1 at CHECK stage=diagnostic-cold-state status=0: halted=0 PASS
+PNY selector SS1 at CHECK stage=final-prom status=0: halted=0 PASS
+PNY selector SS1 at ARMED: one transaction: halted=0 PASS
+PNY selector SS1 at entry: plm=: halted=0 PASS
+PNY selector SS1 at selector intent:: halted=1 PASS
+PNY selector SS1 at PCIe FLR begin:: halted=1 PASS
+PNY selector SS1 at Falcon reset begin: base=0x110000: halted=1 PASS
+PNY selector SS1 at Falcon DMA: base=0x110000: halted=1 PASS
+PNY selector SS1 at Falcon reset begin: base=0x840000: halted=1 PASS
+PNY selector SS1 at Falcon DMA: base=0x840000: halted=1 PASS
+PNY selector SS1 at post-FLR SEC2 reset released: halted=1 PASS
+122 PNY actual app/core scenarios passed; all hardware and firmware execution SIMULATED.

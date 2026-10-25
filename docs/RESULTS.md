@@ -1,6 +1,6 @@
 # Measured results and evidence limits
 
-See [hardware](../README.md). Exactly one hardware attempt RUN00 completed; publication rebuilt the same EFI and performed no new GPU attempt.
+See [hardware](../README.md). Original RUN00 and dynamic RUN04 succeeded; RUN01–03 were rejected before unlocking. Publication builds perform no GPU attempt. Original RUN00 evidence below is preserved; [RUN04 details](DYNAMIC-SS0.md) add one dynamic success.
 
 ## UEFI
 
@@ -33,3 +33,16 @@ All 16,777,216 outputs per type exactly 4096 for all-ones inputs. Not random-inp
 Public data remove UUID, DLL path, device snapshots containing UUIDs, timestamp. Original script hash `0fcd0a81d59f69d91e444780228a7042a1a71996df70eddce1f92aeea562241d` remains. Public parameterized tool has different source bytes; its computation preserves parameters but was not rerun on GPU for publication.
 
 No endurance test, cold-power restore A/B round-trip, other hardware/driver, general single-GPU or application validation has been completed. Simulations do not prove recovery from every real failure; firmware protocol hangs may exceed deadlines.
+
+## v0.2 RUN04
+
+[Benchmark samples](../evidence/benchmark-run04.json) · [UEFI log](../evidence/unlock-run04.txt)
+
+| Input | Original stock TFLOPS | RUN04 TFLOPS | Ratio |
+| --- | ---: | ---: | ---: |
+| FP16 | 59.717350 | 113.321285 | 1.897627× |
+| BF16 | 69.917815 | 113.168405 | 1.618592× |
+
+Entry SS0=24321117, fuse=3, register824148=1; post-FLR SS0=88888888/SS1=7; one FLR and clean=1.
+Dynamic EFI 66,560 bytes: `0cf96d7ce5b81b87caf463b6ef4a2365b4785fb6d64273ee38a7d9f699e96845`.
+Matched original script/GPU/DLL/parameters and constant-output checks passed. One dynamic hardware run and about three minutes of observation do not establish repeatability, endurance or application speed.

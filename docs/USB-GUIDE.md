@@ -16,3 +16,5 @@ Cancellation/rejection: inspect logs before retrying.
 ## Skip or restore
 
 Full shutdown, PSU off/unplug ~10 seconds, boot Windows directly without USB selection. Warm reboot + skipping USB does not prove cleared state. A measured cold-restore round-trip is not yet completed. Keep prior USB files and logs backed up; changed hardware needs new diagnostics.
+
+For v0.2 dynamic mode expect **TRIAL DYNAMIC SS0**. All other manual steps remain. A rejection means preserve the report, not repeat blindly. [Policy](DYNAMIC-SS0.md).

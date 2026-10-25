@@ -27,17 +27,22 @@ jobs:
       - name: Diagnostic v4 simulated checks
         shell: powershell
         run: .\Test-Diagnostic.ps1
-      - name: Both EFI modes and exact tested hash
+      - name: Three EFI modes and exact measured hashes
         shell: powershell
         run: |
           .\Build.ps1
           .\Build.ps1 -Experimental
           $efi='src/build/pny3080ti/experimental-preserve-ss1/PNY3080TI.EFI'
-          if((Get-FileHash $efi).Hash -ne '197602679e4574a5993e5ea6f963e128a7662ccaa1a382c2c2b29838e3a4bb08'){throw 'Experimental EFI differs from measured build'}
+          if((Get-FileHash $efi).Hash -ne '197602679e4574a5993e5ea6f963e128a7662ccaa1a382c2c2b29838e3a4bb08'){throw 'Original EFI differs from measured build'}
+          .\Build.ps1 -Experimental -DynamicEntrySs0
+          $dynamic='src/build/pny3080ti/experimental-dynamic-ss0-preserve-ss1/PNY3080TI.EFI'
+          if((Get-FileHash $dynamic).Hash -ne '0cf96d7ce5b81b87caf463b6ef4a2365b4785fb6d64273ee38a7d9f699e96845'){throw 'Dynamic EFI differs from measured RUN04'}
       - name: Mocked USB file copy (no physical device)
         shell: powershell
-        run: .\tools\Test-CopyUsb.ps1
+        run: |
+          .\tools\Test-CopyUsb.ps1
+          .\tools\Test-CopyUsb.ps1 -DynamicEntrySs0
       - name: Explicit scope
         shell: pwsh
         run: |
-          Write-Output 'No GPU, firmware execution or private PROM in CI. 119 fixture scenarios are skipped here; local results are documented separately.'
+          Write-Output 'No GPU, firmware execution or private PROM in CI. 122 original / 221 dynamic fixture scenarios are skipped here; local results are documented separately.'

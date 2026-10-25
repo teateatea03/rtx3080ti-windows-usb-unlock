@@ -189,7 +189,13 @@ static VOID pny_setup(enum app_case mode,enum pny_fault fault){
  files[3].protocol.Write=pny_report;conin.ReadKeyStroke=pny_key;st.StandardErrorHandle=st.ConsoleOutHandle;
  registers[0x1183a4/4]=GU_DEVICE_MEMORY_SIZE;registers[0x8241e0/4]=3; /* Actual RUN0003: version 2, signature offset 768. */
  registers[SS0/4]=GU_PNY_ENTRY_SS0_ALT;registers[SS1/4]=GU_PNY_ENTRY_SS1;
- if(fault==P_SS0)registers[SS0/4]^=1;
+ if(fault==P_SS0){
+#ifdef GU_PNY_DYNAMIC_ENTRY_SS0
+  registers[SS0/4]=0xffffffffU;
+#else
+  registers[SS0/4]^=1;
+#endif
+ }
  if(fault==P_SS1)registers[SS1/4]=6;
  if(fault==P_MEMORY)registers[0x1183a4/4]^=1;
  if(fault==P_WARM)registers[0x118234/4]=0xff;
@@ -210,6 +216,22 @@ static VOID pny_clean(VOID){
 static VOID pny_no_transaction(VOID){
  CHECK(!Gu.started&&!fake.mmio_writes&&!fake.live_maps&&!fake.gsp_starts&&!fake.sec2_starts&&!fake.flrs);
 }
+#ifdef GU_PNY_DYNAMIC_ENTRY_SS0
+static UINT32 dynamic_fail_offset;
+static EFI_STATUS EFIAPI dynamic_read_failure(EFI_PCI_IO_PROTOCOL *p,EFI_PCI_IO_PROTOCOL_WIDTH w,
+    UINT8 bar,UINT64 offset,UINTN count,VOID *value){
+  if(offset==dynamic_fail_offset)return EFI_DEVICE_ERROR;
+  return read_memory(p,w,bar,offset,count,value);
+}
+static BOOLEAN dynamic_short_log;
+static EFI_STATUS EFIAPI dynamic_log_failure(EFI_FILE_PROTOCOL *f,UINTN *n,VOID *data){
+  if(!strncmp(data,"PNY dynamic preflight:",21)){
+    if(dynamic_short_log){*n=0;return EFI_SUCCESS;}
+    return EFI_DEVICE_ERROR;
+  }
+  return pny_report(f,n,data);
+}
+#endif
 int main(int argc,char **argv){
  setvbuf(stdout,NULL,_IONBF,0);CHECK(argc==4);load_fixture_assets(argv[1],argv[2]);
  memcpy(originals,GuAssets,sizeof(originals));size_t n;UINT8 *c=read_file(argv[3],&n);
@@ -236,7 +258,69 @@ int main(int argc,char **argv){
   dispose_host_fixture();passed++;
  }
  puts("PNY both measured SS0 baselines and immutable per-entry latch PASS");
- /* Full app success and original file/input/security failure paths. */
+ const UINT32 new_entries[]={0x14131116U,0x24121117U,0x24121116U};
+#ifndef GU_PNY_DYNAMIC_ENTRY_SS0
+  /* Original mode must keep refusing new values; dynamic is opt-in. */
+  for(UINTN i=0;i<3;i++){
+    pny_setup(APP_SUCCESS,P_OK);registers[SS0/4]=new_entries[i];
+    CHECK(pny_run()!=EFI_SUCCESS);pny_no_transaction();pny_clean();
+    CHECK(!key_calls);dispose_host_fixture();passed++;
+  }
+#else
+  const UINT32 accepted[]={0x14131116U,0x24121117U,0x24121116U,0U,0x03000062U};
+  for(UINTN i=0;i<sizeof(accepted)/sizeof(accepted[0]);i++){
+    pny_setup(APP_SUCCESS,P_OK);registers[SS0/4]=accepted[i];
+    CHECK(pny_run()==EFI_SUCCESS);pny_clean();
+    CHECK(registers[SS0/4]==0x88888888U&&registers[SS1/4]==7&&fake.flrs==1);
+    CHECK(strstr(report_text,"FWSEC[8241e0]=0x3 strap[824148]=0x1")!=NULL);
+    printf("PNY dynamic candidate %08x: simulated success PASS\n",accepted[i]);
+    dispose_host_fixture();passed++;
+  }
+  const UINT32 rejected[]={0xffffffffU,0xbadf0000U,0xbadf1234U,0x88888888U};
+  for(UINTN i=0;i<sizeof(rejected)/sizeof(rejected[0]);i++){
+    pny_setup(APP_SUCCESS,P_OK);registers[SS0/4]=rejected[i];
+    CHECK(pny_run()!=EFI_SUCCESS);pny_no_transaction();pny_clean();
+    UINT32 a,b;CHECK(!key_calls&&!GuGetEntrySelectors(&a,&b));
+    dispose_host_fixture();passed++;
+  }
+  const UINT32 bad_ss1[]={6,8,0x10,0x80000007U,0xffffffffU};
+  const UINT32 bad_fuse[]={0,1,7,0xffffffffU};
+  const UINT32 bad_strap[]={0,3,0xffffffffU};
+  for(UINTN group=0;group<3;group++){
+    const UINT32 *values=group==0?bad_ss1:group==1?bad_fuse:bad_strap;
+    UINTN count=group==0?5:group==1?4:3;
+    for(UINTN i=0;i<count;i++){
+      pny_setup(APP_SUCCESS,P_OK);registers[SS0/4]=new_entries[2];
+      registers[(group==0?SS1:group==1?0x8241e0:0x824148)/4]=values[i];
+      CHECK(pny_run()!=EFI_SUCCESS);pny_no_transaction();pny_clean();
+      UINT32 a,b;CHECK(!key_calls&&!GuGetEntrySelectors(&a,&b));
+      dispose_host_fixture();passed++;
+    }
+  }
+  for(UINTN i=0;i<2;i++){
+    pny_setup(APP_SUCCESS,P_OK);registers[SS0/4]=new_entries[2];
+    dynamic_fail_offset=i?0x824148:0x8241e0;pci.Mem.Read=dynamic_read_failure;
+    CHECK(pny_run()!=EFI_SUCCESS);pny_no_transaction();pny_clean();
+    UINT32 a,b;CHECK(Gu.fault&&!key_calls&&!GuGetEntrySelectors(&a,&b));
+    dispose_host_fixture();passed++;
+    pny_setup(APP_SUCCESS,P_OK);registers[SS0/4]=new_entries[2];
+    dynamic_short_log=(BOOLEAN)i;files[3].protocol.Write=dynamic_log_failure;
+    CHECK(pny_run()!=EFI_SUCCESS);pny_no_transaction();pny_clean();
+    CHECK(!key_calls&&!GuGetEntrySelectors(&a,&b));
+    dispose_host_fixture();passed++;
+  }
+  const UINT32 resample[]={0,0x1183a4,GU_GFW_PLM_OFFSET,GU_GFW_BOOT_OFFSET,
+    GU_GFW_CPUCTL_OFFSET,0x1fa828,GU_FEAT_PLM_OFFSET,SS0,SS1,0x8241e0,0x824148};
+  for(UINTN i=0;i<sizeof(resample)/sizeof(resample[0]);i++){
+    pny_setup(APP_SUCCESS,P_OK);registers[SS0/4]=new_entries[2];
+    mutate_stage="PNY dynamic preflight:";mutate_offset=resample[i];mutate_mask=1;
+    CHECK(pny_run()!=EFI_SUCCESS&&pny_injected);pny_no_transaction();pny_clean();
+    UINT32 a,b;CHECK(!key_calls&&!GuGetEntrySelectors(&a,&b));
+    dispose_host_fixture();passed++;
+  }
+  puts("PNY dynamic entry, independent fuse/strap reads, failed IO/logs and pre-latch resample PASS");
+#endif
+  /* Full app success and original file/input/security failure paths. */
  const enum app_case app_cases[]={APP_SUCCESS,APP_ESCAPE,APP_TIMEOUT,APP_OLD_KEY,APP_OWNER,APP_SECUREBOOT,
   APP_DUPLICATE,APP_BAD_BAR,APP_NO_USB,APP_SHORT_WRITE,APP_FLUSH,APP_BAD_SIZE,APP_BAD_HASH,
   APP_BAD_PROM,APP_WATCHDOG,APP_CONFIG,APP_BME,APP_DIRTY,APP_UNMAP,APP_SELECTOR,APP_LOG_DIRTY,
@@ -275,7 +359,13 @@ int main(int argc,char **argv){
  /* Retained real core error injection, with actual PNY firmware image/layout. */
  for(int m=SUCCESS;m<SCENARIO_COUNT;m++){
   pny_setup(APP_SUCCESS,P_OK);fake.mode=(enum scenario)m;
-  if(m==CORE_ENTRY_SS0)registers[SS0/4]^=1;
+  if(m==CORE_ENTRY_SS0){
+#ifdef GU_PNY_DYNAMIC_ENTRY_SS0
+    registers[SS0/4]=0xffffffffU;
+#else
+    registers[SS0/4]^=1;
+#endif
+   }
   if(m==CORE_ENTRY_SS1)registers[SS1/4]^=1;
   if(m==DISPLAY_CHANGED){modes[0].FrameBufferBase+=4096; /* handled separately below */ dispose_host_fixture();continue;}
   EFI_STATUS s=pny_run();pny_common();
@@ -299,6 +389,20 @@ int main(int argc,char **argv){
   printf("PNY selector %s at %s: halted=%u PASS\n",sel?"SS1":"SS0",stages[i],halted);
   dispose_host_fixture();passed++;
  }
+ #ifdef GU_PNY_DYNAMIC_ENTRY_SS0
+  /* New values must retain every existing callback-boundary mutation guard. */
+  for(UINTN entry=0;entry<3;entry++)for(UINTN sel=0;sel<2;sel++)
+  for(UINTN i=0;i<sizeof(stages)/sizeof(stages[0]);i++){
+    pny_setup(APP_SUCCESS,P_OK);registers[SS0/4]=new_entries[entry];
+    mutate_stage=stages[i];mutate_offset=sel?SS1:SS0;
+    CHECK(pny_run()!=EFI_SUCCESS&&pny_injected);pny_common();
+    CHECK(fake.mmio_writes==writes_at_mutation);
+    if(Gu.started){CHECK(halted&&Gu.retained&&Gu.allocations&&!(config[4]&4));}
+    else{pny_no_transaction();pny_clean();}
+    dispose_host_fixture();passed++;
+  }
+  puts("PNY dynamic three new entries x two selectors x eleven transaction boundaries PASS");
+#endif
  for(UINTN i=0;i<5;i++)free((VOID *)originals[i].firmware.data);
  printf("%u PNY actual app/core scenarios passed; all hardware and firmware execution SIMULATED.\n",passed);
  return 0;

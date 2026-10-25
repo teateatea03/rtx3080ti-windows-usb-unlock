@@ -13,3 +13,7 @@ Direct base: impacifist/Windows-GPU-UNLOCK `e3f03cd9389195adcabda4743d8fc2922b32
 - Exclude firmware, PROM, private identifiers and build products.
 
 Modified C/H carry dated notices. Same-line notice preserves runtime diagnostic line numbers; the experimental EFI remains byte-identical. Vendor code retains earlier modification notices. IMPORT-MANIFEST records local input, initial export and final public hashes; input hashes are not presented as pristine upstream hashes.
+
+## v0.2.0-experimental
+
+Add explicit GU_PNY_DYNAMIC_ENTRY_SS0: validated per-invocation SS0 latch, independent raw fuse/strap logs and callback-free cold resampling, retaining exact identity/PROM/display/SS1/cleanup checks. Original mode stays byte-identical. 221 dynamic/122 original app/core simulations and 32 compile selections. Preserve RUN01–03 refusals and RUN04 success. Matching build/test/package/copy options and CI hashes added; no firmware redistribution or persistent boot installation.

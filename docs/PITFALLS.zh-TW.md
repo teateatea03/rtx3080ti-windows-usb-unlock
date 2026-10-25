@@ -5,7 +5,7 @@
 | # | 踩坑／症狀 | 修正與驗證 | 界線 |
 | --- | --- | --- | --- |
 | 1 | v3 把 `0x824160` 的 SEC2 slot 9 當作 GSP FWSEC，曾錯判 raw=1/version=1。 | 上游公式 `0x8241c0 + (ucode_id-1)*4`，ID=9 應讀 `0x8241e0`。v4 raw=3 → version=2 → 簽章偏移 768，PROM 絕對位置 282852。 | 撤回 version=1 結論；舊版僅供追查。 |
-| 2 | 不同原廠冷啟動 SS0 曾為 `24321116`、`24321156`，差 bit `0x40`。 | 只接受兩個實測初值；單次鎖定後任何變化都拒絕，即使變成另一允許值也不重鎖，加入交叉變動測試。 | 原因不明，不擴大白名單。 |
+| 2 | 把兩個早期SS0值視為固定清單，RUN01–03後來出現新值而拒絕。 | v0.2明確啟用動態初值驗證／當次鎖定，RUN04以24321117成功，執行中仍不重鎖。 | [詳情](DYNAMIC-SS0.md)：原因未知，動態版僅一次實機成功。 |
 | 3 | Command=0 無法直接 MMIO；直接改 Command 可能與 EFI Attributes 快取不一致。 | 診斷 v3/v4 只以 16-bit Command 暫開 MSE，回復 0 並比較 256 bytes。解鎖版用 Attributes MEMORY 再處理 BME；Supported=`0x13763`、Get=0 各驗兩次。 | API 部分生效仍須清理，不能用 readback 把錯誤改判成功。 |
 | 4 | CPU 無內顯，5080 的實體 GOP/text 與 aggregate ConsoleOut/StdErr 是不同 handle。 | 驗證並鎖定 ownership／顯示拓樸，要求 3080 Ti 未被 driver/GOP 使用。 | 不套 generic/headless、detach 或單卡捷徑。 |
 | 5 | 12GB 配置不同於 3090 24GB 參考。 | 依實測 BAR、VRAM、FWSEC、顯示路徑建立專用 policy。 | 只改 PCI ID 不足以移植。 |
@@ -25,3 +25,5 @@
 公開前的乾淨 checkout 也抓到換行問題：Git 正規化成 LF 後，診斷 vendor-manifest 原先對 CRLF 原始 bytes 的雜湊會不符。已用 .gitattributes 明確保留診斷 vendor 檔的 CRLF checkout；不是略過驗證。乾淨 checkout 會再跑診斷測試。
 
 [English](PITFALLS.md) · [來源](REFERENCES.md) · [重現](REPRODUCE.zh-TW.md)
+
+舊版SS0拒絕會短路跳過fuse／相關寄存器讀取，不能把失敗報告當作所有後續條件已通過。動態版記錄兩個raw值並在鎖定前重讀。

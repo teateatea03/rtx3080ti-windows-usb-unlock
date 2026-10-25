@@ -18,7 +18,25 @@ static UINT64 PnyOriginalAttributes;
 static EFI_PCI_IO_PROTOCOL *PnyDecodePci;
 static EFI_GUID PnyTextGuid=EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL_GUID;
 #ifdef GU_EXPERIMENTAL_3090
-static BOOLEAN PnyObservedSs0(UINT32 Value){return Value==GU_PNY_ENTRY_SS0||Value==GU_PNY_ENTRY_SS0_ALT;}
+static BOOLEAN PnyObservedSs0(UINT32 Value){
+#ifdef GU_PNY_DYNAMIC_ENTRY_SS0
+  /* Match the upstream entry-latch exclusions. This is a candidate initial
+     value, not proof of a cold card; all other cold/PROM/fuse gates still apply. */
+  return Value!=0xffffffffU&&(Value&0xffff0000U)!=0xbadf0000U&&Value!=0x88888888U;
+#else
+  return Value==GU_PNY_ENTRY_SS0||Value==GU_PNY_ENTRY_SS0_ALT;
+#endif
+}
+#ifdef GU_PNY_DYNAMIC_ENTRY_SS0
+/* No log/file callbacks between this complete resample and entry latching. */
+static BOOLEAN PnyColdRegistersMatch(UINT32 Ss0,UINT32 Ss1){
+  return GuRead32(0)==GU_CHIP_ID&&GuRead32(0x1183a4)==GU_DEVICE_MEMORY_SIZE&&
+    GuRead32(GU_GFW_PLM_OFFSET)==0x8b8f&&GuRead32(GU_GFW_BOOT_OFFSET)==0x3ff&&
+    GuRead32(GU_GFW_CPUCTL_OFFSET)==0x10&&GuRead32(0x1fa828)==0&&
+    GuRead32(GU_FEAT_PLM_OFFSET)==0xffffff8f&&GuRead32(GU_FEAT_SS0_OFFSET)==Ss0&&
+    GuRead32(GU_FEAT_SS1_OFFSET)==Ss1&&GuRead32(0x8241e0)==3&&GuRead32(0x824148)==1&&!Gu.fault;
+}
+#endif
 #endif
 static VOID PnyReset(VOID) {
   memset(&PnyDisplay,0,sizeof(PnyDisplay));PnyDisplayLatched=FALSE;

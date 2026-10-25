@@ -10,6 +10,12 @@ static inline BOOLEAN GuPnyStatusError(EFI_STATUS Status){return Status!=EFI_SUC
 #define EFI_ERROR(Status) GuPnyStatusError(Status)
 #endif
 
+/* The dynamic selector policy is a separate manual PNY trial, never a generic
+   enable switch, diagnostic mode, full-SS1 or automatic/internal boot profile. */
+#if defined(GU_PNY_DYNAMIC_ENTRY_SS0) && (!defined(GU_PROFILE_PNY_B550_3080TI) || !defined(GU_EXPERIMENTAL_3090) || !defined(GU_ENTRY_LATCHED_SS1_PRESERVE))
+#error Dynamic SS0 requires explicit manual PNY experimental preserve-SS1 profile
+#endif
+
 /* Secondary display adapter on the B650M profile (Raphael iGPU). The
    aggregate-console profile has no second adapter. */
 #define GU_AMD_ID 0x164e1002U

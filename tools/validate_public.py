@@ -52,6 +52,24 @@ def main():
             assert result["CheckedOutputElements"] == 4096**2 and result["ExactExpectedOutput"] == 4096
             assert statistics.median(result["SamplesTflops"]) == result["MedianTflops"]
         print(f'{b["Input"]}: {a["MedianTflops"]/b["MedianTflops"]:.6f}x')
+    dynamic = json.loads((ROOT / "evidence/benchmark-run04.json").read_text())
+    for key in ("Gpu", "Bus", "CuBlasVersion", "CuBlasSha256", "BenchmarkScriptSha256"):
+        assert dynamic[key] == before[key], key
+    for b, d in zip(before["Results"], dynamic["Results"]):
+        for key in ("Input", "N", "Output", "Accumulation", "ComputeType", "MathMode",
+                    "Algorithm", "IterationsPerSample", "CheckedOutputElements", "ExactExpectedOutput"):
+            assert d[key] == b[key], key
+        assert statistics.median(d["SamplesTflops"]) == d["MedianTflops"]
+        print(f'{d["Input"]} RUN04: {d["MedianTflops"]/b["MedianTflops"]:.6f}x')
+    report = (ROOT / "evidence/unlock-run04.txt").read_text()
+    assert "TRIAL DYNAMIC SS0:" in report
+    assert report.count("PNY dynamic preflight: SS0=0x24321117 SS1=0x7 FWSEC[8241e0]=0x3 strap[824148]=0x1") == 4
+    assert "transaction result=0 containment=0 started=1 quiesced=1 fault=0 retained=0 maps=0 FLR=1" in report
+    assert "SS0=88888888 SS1=00000007" in report
+    assert report.rstrip().endswith("FINAL status=0 stage=transaction attempted=1 driver_release=0 clean=1")
+    for run in (1, 2, 3):
+        refused = (ROOT / f"evidence/rejected-run0{run}.txt").read_text()
+        assert "stage=diagnostic-cold-state attempted=0 driver_release=0 clean=1" in refused
     sys.path.insert(0, str(ROOT / "tools/firmware"))
     import generate_v67
     assert hashlib.sha256(generate_v67.build_payload()).hexdigest() == generate_v67.PAYLOAD_SHA256

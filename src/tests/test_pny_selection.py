@@ -11,6 +11,7 @@ keep = "-DGU_ENTRY_LATCHED_SS1_PRESERVE"
 full = "-DGU_ENTRY_LATCHED_SS1_FULL"
 original = "-DGU_STOCK_PROFILE_ORIGINAL_03100062"
 observed = "-DGU_STOCK_PROFILE_OBSERVED_03000062"
+dynamic = "-DGU_PNY_DYNAMIC_ENTRY_SS0"
 cases = [
  ([], True), ([pny], True), ([pny, exp, keep], True),
  ([pny, exp], False), ([pny, keep], False), ([pny, exp, full], False),
@@ -25,6 +26,13 @@ cases = [
 ]
 for mode in ("GU_AUTOMATIC_BOOT", "GU_INTERNAL_BOOT", "GU_HEADLESS_RESEARCH"):
     cases += [([pny, exp, keep, "-D" + mode], False), ([pny, "-D" + mode], False)]
+cases += [
+ ([dynamic], False), ([pny, dynamic], False), ([exp, keep, dynamic], False),
+ ([pny, exp, dynamic], False), ([pny, exp, full, dynamic], False),
+ ([pny, exp, keep, dynamic], True),
+]
+for mode in ("GU_AUTOMATIC_BOOT", "GU_INTERNAL_BOOT", "GU_HEADLESS_RESEARCH"):
+    cases += [([pny, exp, keep, dynamic, "-D" + mode], False)]
 for defs, expected in cases:
     source = '#include "port.h"\n'
     if not defs:

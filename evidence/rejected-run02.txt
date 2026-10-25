@@ -1,0 +1,48 @@
+PNY RTX3080Ti / B550 / RTX5080 display; manual USB experiment; SS1 preserved.
+RUN02
+U attempts once; Esc or timeout cancels. Hardware unlock unverified.
+BUILD MODE: EXPERIMENTAL MANUAL UNLOCK; compile-time profile=entryLatchedSs1Preserve. The shared I/O preflight banner above is superseded: exact-card checks and manual U can authorize one stock transaction.
+CHECK stage=secure-boot status=0
+CHECK stage=watchdog status=0
+PCI enumeration: status=0 handles=43
+PCI target matches=1 status=0
+CHECK stage=target status=0
+CHECK stage=display status=0
+bar0 query: status=0
+bar0 descriptor: type=0 granularity=32 min=0xed000000 max=0xedffffff length=0x1000000 translation=0
+CHECK stage=bar0 status=0
+ownership: records=4 exclusive=1 status=0
+owner[0] protocol=09576e91 attributes=0x1 count=204 agent=0xab5cef98 controller=0
+owner[1] protocol=09576e91 attributes=0x4 count=2 agent=0xa98f5018 controller=0xa7fd5498
+owner[2] protocol=09576e91 attributes=0x2 count=2 agent=0xaa1c3898 controller=0xa7fd5498
+owner[3] protocol=4cf5b200 attributes=0x1 count=49 agent=0xab5cef98 controller=0
+CHECK stage=pny-initial-ownership status=0
+PNY decode intent: exact initial Command=0; enable MEMORY only; BME remains off.
+CHECK stage=pny-memory-decode status=0
+target location: status=0
+config[00]=220810de 00100002 030000a1 00800010
+config[10]=ed000000 d000000c 00000000 e000000c
+config[20]=00000000 0000e001 00000000 1384196e
+config[30]=ee000000 00000060 00000000 0000010a
+config[40]=1384196e 00000000 00000000 00000000
+config[50]=00000000 00000001 0023d6ce 00000000
+config[60]=48036801 00000008 00807805 00000000
+config[70]=00000000 00000000 0012b410 10688de1
+config[80]=00092810 00454d04 10430042 00000000
+config[90]=00000000 00000000 00000000 00070813
+config[a0]=00000000 0180001e 001e0004 00000000
+config[b0]=00000000 01140009 00000000 00000000
+config[c0]=00000000 00000000 00050011 00b90000
+config[d0]=00ba0000 00000000 00000000 00000000
+config[e0]=00000000 00000000 00000000 00000000
+config[f0]=00000000 00000000 00000000 00000000
+target BDF=0:4:0.0 checks=1 pm=0x60 pcie=0x78 msi=0x68 msix=0
+CHECK stage=pny-runtime-config status=0
+live PROM hash matched=1
+CHECK stage=prom status=0
+cold state: chip=0xb72000a1 plm=0xffffff8f gfw=0x8b8f/0x3ff/0x10 WPR2_HI=0 SS0=0x24121117 SS1=0x7
+cold expected: profile=entryLatchedSs1Preserve chip=0xb72000a1 memory=0x3000 entry_latched=0 SS0=0 SS1=0 SS0target=0x88888888 SS1policy=preserve entry=0 target=0x8
+cold observed: profile=entryLatchedSs1Preserve chip=0xb72000a1 memory=0x3000 SS0=0x24121117 SS1=0x7
+CHECK stage=diagnostic-cold-state status=0x8000000000000006
+PNY decode restored: original protocol attributes and Command=0 verified.
+FINAL status=0x8000000000000006 stage=diagnostic-cold-state attempted=0 driver_release=0 clean=1

@@ -1,5 +1,7 @@
 # 從原始碼重現整套流程
 
+**v0.2：**下列命令保留原版兩值模式。新版動態模式請依 [動態重現步驟](DYNAMIC-SS0.md)，測試／建置／封裝／複製皆明確加對應選項。目前原版122、動態221情境與32組編譯檢查；歷史v0.1為119／23。
+
 [English 詳細參數](REPRODUCE.md) · [踩坑](PITFALLS.zh-TW.md) · [程式架構](ARCHITECTURE.md)
 
 先核對 [README 硬體條件](../README.zh-TW.md)：同型號不等於符合 BDF、BAR、顯示拓樸與冷狀態。未簽章程式需關閉 Secure Boot；改韌體設定前請把原設定與可能用到的 BitLocker 復原金鑰留在自己手上，不能上傳。
@@ -21,7 +23,7 @@ lld-link --version
 .\Build.ps1
 ~~~
 
-這些只在主機編譯／模擬，不會碰 GPU。第一個跑 9 組回歸與 23 組編譯限制，未提供 `-Prom` 會明確略過 119 情境與 fixture 預設模式測試。第二個建置獨立診斷 v4、跑 60 情境與 5 種錯誤報告。預設 Build 產物是 `src/build/pny3080ti/diagnostic-only/PNY3080TI.EFI`，無法 arm GPU 寫入／DMA／reset；它與獨立診斷 v4 不同，執行時仍需相同 app 資料目錄。
+這些只在主機編譯／模擬，不會碰 GPU。第一個跑 9 組回歸與 32 組編譯限制，未提供 `-Prom` 會明確略過 122／221 情境與 fixture 預設模式測試。第二個建置獨立診斷 v4、跑 60 情境與 5 種錯誤報告。預設 Build 產物是 `src/build/pny3080ti/diagnostic-only/PNY3080TI.EFI`，無法 arm GPU 寫入／DMA／reset；它與獨立診斷 v4 不同，執行時仍需相同 app 資料目錄。
 
 ## 2. 診斷 v4 與私人擷取
 
@@ -66,11 +68,11 @@ PROM 雜湊綁定本案實測卡，不符就調查，不要改雜湊強迫過關
 .\Build.ps1 -Experimental
 ~~~
 
-119 個 app/core 情境仍是模擬，另驗預設拒絕寫入。實驗 EFI 應 66,048 bytes、SHA-256 `197602679e4574a5993e5ea6f963e128a7662ccaa1a382c2c2b29838e3a4bb08`。PE 檢查排除 imports、可寫又可執行區段；新編譯不代表新實機驗證。
+122 個原版 app/core 情境仍是模擬，另驗預設拒絕寫入。實驗 EFI 應 66,048 bytes、SHA-256 `197602679e4574a5993e5ea6f963e128a7662ccaa1a382c2c2b29838e3a4bb08`。PE 檢查排除 imports、可寫又可執行區段；新編譯不代表新實機驗證。
 
 ## 5. 本機 USB 資料樹
 
-封裝核對 v4 完整／回復、PROM、selector/fuse、119 測試紀錄、source/EFI/asset 雜湊。
+封裝核對 v4 完整／回復、PROM、selector/fuse、122個原版測試紀錄、source/EFI/asset 雜湊。
 
 ~~~powershell
 python tools/package_local.py --assets .local/firmware/assets --diagnostic-summary .local/assessment/RUN0003.TXT.summary.json --output .local/usb

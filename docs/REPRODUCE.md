@@ -1,5 +1,7 @@
 # Reproduce, build and prepare locally
 
+**v0.2:** the commands below preserve the original two-value mode. For the newly released dynamic mode use the matching explicit test/build/package/copy flags in [dynamic reproduction](DYNAMIC-SS0.md). Current original tests:122 cases, dynamic:221; compile-policy:32. The historical v0.1 count was119/23.
+
 [繁體中文](REPRODUCE.zh-TW.md) · [Pitfalls](PITFALLS.md) · [Architecture](ARCHITECTURE.md)
 
 The complete profile is in [README](../README.md), including specific bus/BAR/display topology. A same-model card is not enough. Keep Secure Boot recovery settings and any BitLocker recovery key available privately before changing firmware settings; the unsigned experiment requires Secure Boot off. Do not upload recovery keys.
@@ -21,7 +23,7 @@ lld-link --version
 .\Build.ps1
 ~~~
 
-These are host builds/tests, not GPU execution. Test.ps1 runs 9 generic groups and 23 compile cases; without `-Prom` it explicitly skips 119 fixture scenarios and the fixture-dependent default-mode test. Test-Diagnostic builds/checks v4, runs 60 scenarios and 5 invalid-report cases. Default Build creates `src/build/pny3080ti/diagnostic-only/PNY3080TI.EFI`; it cannot arm GPU writes/DMA/reset. It differs from the independent v4 inventory probe, and needs the same app data tree to run.
+These are host builds/tests, not GPU execution. Test.ps1 runs 9 generic groups and 32 compile cases; without `-Prom` it explicitly skips 122 static / 221 dynamic fixture scenarios and the fixture-dependent default-mode test. Test-Diagnostic builds/checks v4, runs 60 scenarios and 5 invalid-report cases. Default Build creates `src/build/pny3080ti/diagnostic-only/PNY3080TI.EFI`; it cannot arm GPU writes/DMA/reset. It differs from the independent v4 inventory probe, and needs the same app data tree to run.
 
 ## 2. Independent diagnostic v4 and private evidence
 
@@ -66,7 +68,7 @@ The PROM hash is deliberately pinned to the measured card. If yours differs, sto
 .\Build.ps1 -Experimental
 ~~~
 
-Expected: 119 app/core scenarios (simulated) plus default-mode rejection case. The experimental EFI must be 66,048 bytes and hash `197602679e4574a5993e5ea6f963e128a7662ccaa1a382c2c2b29838e3a4bb08`. PE verification rejects imports and writable/executable sections. Build manifests identify source hashes; a new build alone is not a new hardware validation.
+Expected: 122 original-mode app/core scenarios (simulated) plus default-mode rejection case. The experimental EFI must be 66,048 bytes and hash `197602679e4574a5993e5ea6f963e128a7662ccaa1a382c2c2b29838e3a4bb08`. PE verification rejects imports and writable/executable sections. Build manifests identify source hashes; a new build alone is not a new hardware validation.
 
 ## 5. Local USB file bundle
 

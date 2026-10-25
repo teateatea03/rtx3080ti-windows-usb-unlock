@@ -5,7 +5,7 @@ Historical v1–v3 preserve the development record; use v4 for new diagnostics. 
 | # | Mistake / failure | Correction and limit |
 | --- | --- | --- |
 | 1 | v3 called SEC2 slot 9 at `0x824160` GSP FWSEC and inferred version 1. | Formula `0x8241c0 + (ucode_id-1)*4` gives `0x8241e0` for ID 9. Actual raw 3 selects version 2, offset 768, absolute PROM offset 282852. Version-1 conclusion withdrawn. |
-| 2 | Stock SS0 varied: `24321116` / `24321156`, bit `0x40`. | Accept only observed entries, latch once; reject any mid-invocation change, even between allowed values. Cause unknown. |
+| 2 | Two initial SS0 values were treated as a fixed list; RUN01–03 later refused new values. | v0.2 explicitly validates and latches each invocation; RUN04 succeeded with 24321117. No relatch during execution. Cause unknown; one dynamic hardware run. [Details](DYNAMIC-SS0.md). |
 | 3 | Command=0 blocks MMIO; raw writes disagree with Attributes cache. | Diagnostic bounded 16-bit MSE enable, restore 0, compare all 256 bytes. Unlock uses Attributes MEMORY before BME; Supported=`0x13763`, Get=0 measured twice. Partial-effect API errors still require cleanup and remain errors. |
 | 4 | Separate 5080 physical GOP/text → aggregate console, CPU has no iGPU. | Validate/latch ownership; target must have no driver/GOP. No generic/headless/detach shortcut. |
 | 5 | 12GB differs from 24GB reference. | Port measured geometry, BARs, cold-state and display policy. PCI ID alone is insufficient. |
@@ -25,3 +25,5 @@ Public tools remove paths, UUID and USB serial dependencies. Parameterized bench
 A clean checkout also caught line-ending drift: Git LF normalization invalidated diagnostic vendor-manifest hashes of original CRLF bytes. .gitattributes now explicitly checks out those vendor files as CRLF; verification is retained. Diagnostic tests are rerun from a clean checkout.
 
 [References](REFERENCES.md) · [Reproduction](REPRODUCE.md)
+
+The original SS0 rejection short-circuited before raw fuse/strap reads; those rejected reports did not confirm every later condition. Dynamic mode records both values and resamples before latching.

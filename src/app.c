@@ -306,8 +306,19 @@ static EFI_STATUS ColdCheck(VOID) {
     return EFI_NOT_READY;
 #ifdef GU_ENTRY_LATCHED
   #ifdef GU_PROFILE_PNY_B550_3080TI
+  #ifdef GU_PNY_DYNAMIC_ENTRY_SS0
+  /* Collect both missing raw values before evaluating the selector candidate.
+     Failed reads or log writes never establish a latch or authorize manual U. */
+  UINT32 fuse=GuRead32(0x8241e0),strap=GuRead32(0x824148);
+  GuLog("PNY dynamic preflight: SS0=%#x SS1=%#x FWSEC[8241e0]=%#x strap[824148]=%#x policy=per-invocation-immutable\n",
+    ss0,ss1,fuse,strap);
+  if(Gu.fault||!GuLogReady())return EFI_DEVICE_ERROR;
+  if(!PnyObservedSs0(ss0)||ss1!=GU_PNY_ENTRY_SS1||fuse!=3||strap!=1||
+     !PnyColdRegistersMatch(ss0,ss1))return EFI_NOT_READY;
+  #else
   if(!PnyObservedSs0(ss0)||ss1!=GU_PNY_ENTRY_SS1||
      GuRead32(0x8241e0)!=3||GuRead32(0x824148)!=1||Gu.fault)return EFI_NOT_READY;
+  #endif
 #endif
   if(!GuLatchEntrySelectors(ss0,ss1))return EFI_NOT_READY;
   GuLog("entry selectors: latched_once=1 SS0=%#x SS1=%#x SS0target=0x88888888 SS1policy=%s SS1target=0x8\n",ss0,ss1,
@@ -447,6 +458,9 @@ EFI_STATUS EFIAPI efi_main(EFI_HANDLE Image,EFI_SYSTEM_TABLE *St) {
   GuLog("BUILD MODE: AUTOMATIC INTERNAL UNLOCK; profile=%s; Esc cancellation; all hardware gates retained.\n",GU_STOCK_PROFILE_NAME);
 #elif defined(GU_EXPERIMENTAL_3090)
   GuLog("BUILD MODE: EXPERIMENTAL MANUAL UNLOCK; compile-time profile=%s. The shared I/O preflight banner above is superseded: exact-card checks and manual U can authorize one stock transaction.\n",GU_STOCK_PROFILE_NAME);
+#endif
+#ifdef GU_PNY_DYNAMIC_ENTRY_SS0
+  GuLogText("TRIAL DYNAMIC SS0: validate this boot, latch once, reject later changes; SS1=7 preserved.\n");
 #endif
   UINT8 secure=0xff;UINTN bytes=1;
   Stage="secure-boot";

@@ -1,0 +1,72 @@
+{
+  "release": "v0.2.0-experimental",
+  "hardware_successes": [
+    {
+      "run": "RUN00",
+      "mode": "original",
+      "initial_ss0": "24321116"
+    },
+    {
+      "run": "RUN04",
+      "mode": "dynamic",
+      "initial_ss0": "24321117"
+    }
+  ],
+  "rejected_before_unlock": [
+    "RUN01",
+    "RUN02",
+    "RUN03"
+  ],
+  "full_host_suites": [
+    {
+      "mode": "pny3080ti",
+      "simulated_scenarios": 122,
+      "all_passed": true,
+      "public_log": "evidence\\host-122.txt",
+      "public_log_sha256_lf": "13e27aa2449847fbbcb73b6f4243d787ee0f23695f8fa98921daa5b451335469"
+    },
+    {
+      "mode": "pny3080ti-dynamic-ss0",
+      "simulated_scenarios": 221,
+      "all_passed": true,
+      "public_log": "evidence\\host-221.txt",
+      "public_log_sha256_lf": "8bd0108d075b2c2b7c5b432175618ae3ff4899749181f9db069846762db01573"
+    }
+  ],
+  "generic_regression_groups": 9,
+  "compile_policy_cases": 32,
+  "diagnostic_v4_scenarios": 60,
+  "diagnostic_invalid_reports": 5,
+  "mock_usb_copy_static_and_dynamic_passed": true,
+  "public_packaging_static_and_dynamic_passed": true,
+  "hardware_access_during_publication_checks": false,
+  "efi_reproductions": [
+    {
+      "mode": "diagnostic-only",
+      "sha256": "10c8e4a8dfdd3a90aba33cacda6eff635bb036e573d026e7378cfe01a2ee5f8d",
+      "bytes": 54784,
+      "imports": 0,
+      "nx": true
+    },
+    {
+      "mode": "experimental-preserve-ss1",
+      "sha256": "197602679e4574a5993e5ea6f963e128a7662ccaa1a382c2c2b29838e3a4bb08",
+      "bytes": 66048,
+      "imports": 0,
+      "nx": true
+    },
+    {
+      "mode": "experimental-dynamic-ss0-preserve-ss1",
+      "sha256": "0cf96d7ce5b81b87caf463b6ef4a2365b4785fb6d64273ee38a7d9f699e96845",
+      "bytes": 66560,
+      "imports": 0,
+      "nx": true
+    }
+  ],
+  "limits": [
+    "One successful dynamic hardware run.",
+    "Constant-input GEMM, no model/application/endurance claim.",
+    "No GPU/private PROM in CI.",
+    "Raw private benchmarks/device IDs excluded."
+  ]
+}
