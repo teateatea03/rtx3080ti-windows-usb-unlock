@@ -1,0 +1,161 @@
+﻿{
+    "Repository":  "impacifist/Windows-GPU-UNLOCK",
+    "Revision":  "9352abd27480203ea146f766e7c96957912d148a",
+    "Files":  [
+                  {
+                      "Path":  "License.txt",
+                      "GitBlob":  "ee840505cb0c041145ee87fa07be69a51fa325b2",
+                      "Sha256":  "50CE20C9CFDB0E19EE34FE0A51FC0AFE961F743697B068359AB2F862B494DF80"
+                  },
+                  {
+                      "Path":  "MdePkg/Include/Uefi.h",
+                      "GitBlob":  "68a1d6f946f7040b690642e5c4f068a80edc5108",
+                      "Sha256":  "1EC56991B282C4540AEDEE24B83DDE7FF252EACFCEEC2D5D717192C8CE759683"
+                  },
+                  {
+                      "Path":  "MdePkg/Include/X64/ProcessorBind.h",
+                      "GitBlob":  "51a5af459afacb223c428e0b31217a560856c186",
+                      "Sha256":  "20B43822B0737CBD0F692AD8200CBA4CFC47C192431827A98056C8A0068EFB19"
+                  },
+                  {
+                      "Path":  "MdePkg/Include/Protocol/PciIo.h",
+                      "GitBlob":  "38a81198ddce0098a772128abe5e0a72e085035f",
+                      "Sha256":  "11EF99B00E6B5013842996447A6EC410D4020332075CD9D211A2734318D71197"
+                  },
+                  {
+                      "Path":  "MdePkg/Include/Protocol/GraphicsOutput.h",
+                      "GitBlob":  "532a3c8a651968191d4a2432e19c0f3dde0445b6",
+                      "Sha256":  "1F63D49AC45DBC1C00464CFF900C61952610D648E551E478428EF2FF601F4092"
+                  },
+                  {
+                      "Path":  "MdePkg/Include/Protocol/DevicePath.h",
+                      "GitBlob":  "da2e4aee33f07ec18f41a1684a2c08b363880246",
+                      "Sha256":  "0A3B384FC24EE7901F79094E07DC659133509CEC2243FD47DBF543005FF61301"
+                  },
+                  {
+                      "Path":  "MdePkg/Include/Protocol/LoadedImage.h",
+                      "GitBlob":  "e0e562772aaf05fd1994de204d56ceb7d952f3fa",
+                      "Sha256":  "C8E3E7D2B93B6CEC475AEA128EC6EEC0F0328654037627197AC1CAB43FEBC02B"
+                  },
+                  {
+                      "Path":  "MdePkg/Include/Protocol/SimpleFileSystem.h",
+                      "GitBlob":  "f487b32e5c2381adfd0355dc6ec2bee5400cbc99",
+                      "Sha256":  "60C300B0DB855ED6B18062059A024AF873B37208EE8F33E2BB1A6B5A6900DCFB"
+                  },
+                  {
+                      "Path":  "MdePkg/Include/Protocol/DriverBinding.h",
+                      "GitBlob":  "266c2571fa582a7fd4aa8d00d936096786493435",
+                      "Sha256":  "E2C791C00ECB3A674D5AAA08800B76F43C37D1DE05AA4D50FF28086209D3DE16"
+                  },
+                  {
+                      "Path":  "MdePkg/Include/Uefi/UefiBaseType.h",
+                      "GitBlob":  "5bd6e59a934230864d3cefc1f0d03c9862c04fa0",
+                      "Sha256":  "3849C0033D272B7EB54042E84063145A89E3394A1E3DA912DB7DC27C8214E180"
+                  },
+                  {
+                      "Path":  "MdePkg/Include/Uefi/UefiSpec.h",
+                      "GitBlob":  "144f4d3cf2a910799ed4498a38a6bf2fee74e5f9",
+                      "Sha256":  "B9AE7C3067E372690EDEF10299288007773496B810982BC5FCF81873DD651325"
+                  },
+                  {
+                      "Path":  "MdePkg/Include/Guid/PcAnsi.h",
+                      "GitBlob":  "78e758ddd01b830a98b14dc735ca83807a86edfa",
+                      "Sha256":  "F6FDC08A546DA7F436DBCB9482049C4BFF42E271B071CFD6F8587F2F8989D489"
+                  },
+                  {
+                      "Path":  "MdePkg/Include/IndustryStandard/Bluetooth.h",
+                      "GitBlob":  "66b7778f5d920fda16d7ccb0ee0a49c3b855a4e6",
+                      "Sha256":  "316C2E28022B0954828AD5FEAF5136183C5A6B8F6C3788798D50ED921F71E554"
+                  },
+                  {
+                      "Path":  "MdePkg/Include/IndustryStandard/Acpi60.h",
+                      "GitBlob":  "0a0a88e385c97672ecca3cd16d1f09b80074a238",
+                      "Sha256":  "E9F7637646EA289E738FE4DAD248819362BF8135E89137E627756432186097C9"
+                  },
+                  {
+                      "Path":  "MdePkg/Include/Base.h",
+                      "GitBlob":  "92499bd8372246399d90992702b268d12ffb22b1",
+                      "Sha256":  "A90F4BF7B02910711506FA1882A709CA10A6798BD5614C1690B5B10B843F9CFA"
+                  },
+                  {
+                      "Path":  "MdePkg/Include/Uefi/UefiMultiPhase.h",
+                      "GitBlob":  "294f0c1e3580b4a35ee0a8b9ff0647b80c27566f",
+                      "Sha256":  "D4CA140ABF49811BCAD80BF9274D65278FE46B7D9EE51CB5C7CB7F590E938550"
+                  },
+                  {
+                      "Path":  "MdePkg/Include/Protocol/SimpleTextIn.h",
+                      "GitBlob":  "4cd59fe42aa79a35aa7b5719868f6cae53b0a470",
+                      "Sha256":  "A4070DE5D42C98529642A72D372F1B33F0A4CE9700CBDEB6C521CDFABA2DC012"
+                  },
+                  {
+                      "Path":  "MdePkg/Include/Protocol/SimpleTextInEx.h",
+                      "GitBlob":  "345d10e203cd2f6e83138480cf9b71708257d58a",
+                      "Sha256":  "2709E544277F4B0FFA0696BCADD5079CFCCB8188EAF3FB938E97BF13A2AD561B"
+                  },
+                  {
+                      "Path":  "MdePkg/Include/Protocol/SimpleTextOut.h",
+                      "GitBlob":  "9db5bde3c813eba7797285b808216a60470cfc2e",
+                      "Sha256":  "B27A98BDC4B77F9E47097EF10FB78AF564A51B0B91215E064D294ABAC8D862DB"
+                  },
+                  {
+                      "Path":  "MdePkg/Include/Uefi/UefiPxe.h",
+                      "GitBlob":  "0de96e923283bab557d9fb6a27b6568fd24ff228",
+                      "Sha256":  "F00F7B419E747C3700FAB786533BCA1E9B032DB97B94D2C0A03D6608B9489CEB"
+                  },
+                  {
+                      "Path":  "MdePkg/Include/Uefi/UefiGpt.h",
+                      "GitBlob":  "2cede42eb3c4cb8ac3c09e3df40c009aef4200ec",
+                      "Sha256":  "CC924F8228DF2B1E04B4E2D4B0C7D4ECA76B02FFB836F559B8EF7E67D1BC2AA1"
+                  },
+                  {
+                      "Path":  "MdePkg/Include/Uefi/UefiInternalFormRepresentation.h",
+                      "GitBlob":  "0c79e9bfb2c5f3481f9670a960289fc845b7dcea",
+                      "Sha256":  "918E64229BA7EB445CF9299732F90FBA27E8D209BE967148BC0D3CF18F492A25"
+                  },
+                  {
+                      "Path":  "MdePkg/Include/IndustryStandard/Acpi51.h",
+                      "GitBlob":  "6b92af578fd4161985c5c90c5b0a6829299e93d6",
+                      "Sha256":  "E58505211FA3863EAA93B9E4E1CB82128318BC2A392ECDF49AB1086506AD7726"
+                  },
+                  {
+                      "Path":  "MdePkg/Include/Guid/WinCertificate.h",
+                      "GitBlob":  "8aec4d4cc0e7938a9fc803882cdf0924402dddde",
+                      "Sha256":  "AD38747EEEA5A9D62905818BEF6ACDBD856A18DD50708E58C2E867E50E9DA8E4"
+                  },
+                  {
+                      "Path":  "MdePkg/Include/Guid/HiiFormMapMethodGuid.h",
+                      "GitBlob":  "614d8af7466d9c35c44e49576ac0741639619d0a",
+                      "Sha256":  "06FE59E6D8D100F4A65449B4C9BCDE3BAE2A33D30269E835E1AA82E00CD125F6"
+                  },
+                  {
+                      "Path":  "MdePkg/Include/IndustryStandard/Acpi50.h",
+                      "GitBlob":  "0c0f60fb663edaa76455adb4d22150f680518308",
+                      "Sha256":  "7FAC6AE73F7061B008FA9707C873771B69F09FB9FF73D6026EA32FBD7F6FAA63"
+                  },
+                  {
+                      "Path":  "MdePkg/Include/IndustryStandard/Acpi40.h",
+                      "GitBlob":  "6c129979f0b16378742c0f698c9ba8a888fef970",
+                      "Sha256":  "3EF9F3294FBE713C7ED715AE69E0EFF0B997792A4FDCC2ADE0F33AE588B70B7B"
+                  },
+                  {
+                      "Path":  "MdePkg/Include/IndustryStandard/Acpi30.h",
+                      "GitBlob":  "09429e96e279ad7cd770899dd84a0ee4d41343d2",
+                      "Sha256":  "CA86C3D192585F64D07232AB0DEC59F1AAC2E5D36740A21E0A206A59176C660D"
+                  },
+                  {
+                      "Path":  "MdePkg/Include/IndustryStandard/Acpi20.h",
+                      "GitBlob":  "df9cf44dd98b8e305aa67868ab7173cd026c530c",
+                      "Sha256":  "8754C2B2ACD7FD77F27506448DDC5427D196C92146249FFEF71DEE9DD364EE85"
+                  },
+                  {
+                      "Path":  "MdePkg/Include/IndustryStandard/Acpi10.h",
+                      "GitBlob":  "177779bfaff089ffcd22ae89d150ef2cb0fb8029",
+                      "Sha256":  "55B8450E1F393B7D5EB0CBC3FD39D7F0DB5DA60052EC59EACC43CD63D5F42FC5"
+                  },
+                  {
+                      "Path":  "MdePkg/Include/IndustryStandard/AcpiAml.h",
+                      "GitBlob":  "e3720a300905d1a03c96d0b552d6e01a7835d6bb",
+                      "Sha256":  "2CC788ED002C96DFE959CD77BB180EBFA5EDA0EB7686B448483386D4A0E3B56F"
+                  }
+              ]
+}

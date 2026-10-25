@@ -1,0 +1,17 @@
+/.local/
+**/build/
+**/bundle/
+**/__pycache__/
+*.pyc
+*.exe
+*.dll
+*.obj
+*.map
+*.efi
+*.EFI
+*.bin
+*.BIN
+*.rom
+*.zip
+*.tar*
+*.pkg.tar.zst

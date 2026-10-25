@@ -1,0 +1,55 @@
+{
+  "Gpu": "NVIDIA GeForce RTX 3080 Ti",
+  "Bus": "0000:04:00.0",
+  "CuBlasVersion": 120804,
+  "CuBlasSha256": "9513540e4ec4c51ee9e7304138c2cc255c29a8c181f9e80c38efa25738becd99",
+  "Results": [
+    {
+      "Input": "FP16",
+      "Output": "FP32",
+      "Accumulation": "FP32",
+      "ComputeType": 68,
+      "MathMode": 16,
+      "Algorithm": 99,
+      "N": 4096,
+      "IterationsPerSample": 20,
+      "SamplesTflops": [
+        59.71735001745166,
+        59.73329514391549,
+        59.71203521746144
+      ],
+      "MedianTflops": 59.71735001745166,
+      "CheckedOutputElements": 16777216,
+      "ExactExpectedOutput": 4096.0
+    },
+    {
+      "Input": "BF16",
+      "Output": "FP32",
+      "Accumulation": "FP32",
+      "ComputeType": 68,
+      "MathMode": 16,
+      "Algorithm": 99,
+      "N": 4096,
+      "IterationsPerSample": 20,
+      "SamplesTflops": [
+        70.37607043655906,
+        69.91781523685614,
+        69.87049386487097
+      ],
+      "MedianTflops": 69.91781523685614,
+      "CheckedOutputElements": 16777216,
+      "ExactExpectedOutput": 4096.0
+    }
+  ],
+  "TotalGpuAllocationBytes": 134217728,
+  "BenchmarkScriptSha256": "0fcd0a81d59f69d91e444780228a7042a1a71996df70eddce1f92aeea562241d",
+  "FirmwareAccess": false,
+  "PowerOrClockChanges": false,
+  "Limits": "cuBLAS matrix throughput with constant inputs; not application speed or exhaustive correctness",
+  "redactions": [
+    "GPU UUID",
+    "local DLL path",
+    "device snapshots containing UUIDs",
+    "wall-clock timestamp"
+  ]
+}

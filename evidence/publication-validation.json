@@ -1,0 +1,93 @@
+{
+  "hardware_access_during_publication": false,
+  "experimental_efi": {
+    "path": "PNY3080TI.EFI",
+    "bytes": 66048,
+    "sha256": "197602679e4574a5993e5ea6f963e128a7662ccaa1a382c2c2b29838e3a4bb08",
+    "machine": "AMD64",
+    "subsystem": 10,
+    "entry": "efi_main",
+    "entry_rva": 4096,
+    "imports": 0,
+    "iat": 0,
+    "delay_imports": 0,
+    "nx": true,
+    "dynamic_base": true
+  },
+  "default_efi": {
+    "path": "PNY3080TI.EFI",
+    "bytes": 54784,
+    "sha256": "10c8e4a8dfdd3a90aba33cacda6eff635bb036e573d026e7378cfe01a2ee5f8d",
+    "machine": "AMD64",
+    "subsystem": 10,
+    "entry": "efi_main",
+    "entry_rva": 4096,
+    "imports": 0,
+    "iat": 0,
+    "delay_imports": 0,
+    "nx": true,
+    "dynamic_base": true
+  },
+  "simulated_app_core_scenarios": 119,
+  "simulated_default_mode_rejected_before_writes": true,
+  "generic_groups": [
+    {
+      "Name": "config-path",
+      "Passed": true
+    },
+    {
+      "Name": "port",
+      "Passed": true
+    },
+    {
+      "Name": "write-lock",
+      "Passed": true
+    },
+    {
+      "Name": "master-attributes",
+      "Passed": true
+    },
+    {
+      "Name": "runtime",
+      "Passed": true
+    },
+    {
+      "Name": "profile-GU_STOCK_PROFILE_ORIGINAL_03100062",
+      "Passed": true
+    },
+    {
+      "Name": "profile-GU_STOCK_PROFILE_OBSERVED_03000062",
+      "Passed": true
+    },
+    {
+      "Name": "profile-GU_ENTRY_LATCHED_SS1_PRESERVE",
+      "Passed": true
+    },
+    {
+      "Name": "profile-GU_ENTRY_LATCHED_SS1_FULL",
+      "Passed": true
+    }
+  ],
+  "compile_policy_cases": 23,
+  "diagnostic_v4": {
+    "Pe32Plus": true,
+    "Machine": "x64",
+    "Subsystem": "EFI_APPLICATION",
+    "Imports": 0,
+    "Relocations": true,
+    "WriteExecuteSections": 0,
+    "HostScenarios": 60,
+    "TemporaryMemoryDecode": true,
+    "BusMasterEnabled": false,
+    "FirmwareExecution": false,
+    "RestoreFailureStopsBoot": true,
+    "HardwareTested": false
+  },
+  "diagnostic_invalid_reports_rejected": 5,
+  "offline_firmware_assets_reconstructed": true,
+  "mocked_usb_copy_passed": true,
+  "gitleaks_initial_finding": "Unchanged public EDK2 Http11.h line232 X-Auth-Token documentation example; exact fingerprint ignored for relative-path scan. qtools absolute-path scan reports the same reviewed example.",
+  "raw_prom_published": false,
+  "logs": "Host logs are LF normalized, with any repo prefix replaced; no firmware or hardware execution.",
+  "limits": "119 suite requires the private measured PROM and locally obtained assets; CI explicitly skips it. Host tests are simulations; one earlier hardware RUN00 is separate."
+}

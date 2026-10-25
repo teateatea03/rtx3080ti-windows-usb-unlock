@@ -1,0 +1,43 @@
+name: Host checks (no GPU)
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  windows:
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Obtain pinned LLVM 20.1.8
+        shell: pwsh
+        run: |
+          $ErrorActionPreference='Stop'
+          $installer=Join-Path $env:RUNNER_TEMP 'LLVM-20.1.8-win64.exe'
+          Invoke-WebRequest 'https://github.com/llvm/llvm-project/releases/download/llvmorg-20.1.8/LLVM-20.1.8-win64.exe' -OutFile $installer
+          if((Get-FileHash $installer).Hash -ne '3197846a2b19063687dd56e93e34cd941e3548d907f23a6131571321bdf9fe7b'){throw 'LLVM checksum mismatch'}
+          $llvm=Join-Path $env:RUNNER_TEMP 'llvm'
+          & 7z x $installer "-o$llvm" -y | Out-Null
+          if($LASTEXITCODE -ne 0){throw 'LLVM extraction failed'}
+          (Join-Path $llvm 'bin') | Out-File $env:GITHUB_PATH -Encoding utf8 -Append
+      - name: Public text and fixture-independent checks
+        shell: powershell
+        run: .\Test.ps1
+      - name: Diagnostic v4 simulated checks
+        shell: powershell
+        run: .\Test-Diagnostic.ps1
+      - name: Both EFI modes and exact tested hash
+        shell: powershell
+        run: |
+          .\Build.ps1
+          .\Build.ps1 -Experimental
+          $efi='src/build/pny3080ti/experimental-preserve-ss1/PNY3080TI.EFI'
+          if((Get-FileHash $efi).Hash -ne '197602679e4574a5993e5ea6f963e128a7662ccaa1a382c2c2b29838e3a4bb08'){throw 'Experimental EFI differs from measured build'}
+      - name: Mocked USB file copy (no physical device)
+        shell: powershell
+        run: .\tools\Test-CopyUsb.ps1
+      - name: Explicit scope
+        shell: pwsh
+        run: |
+          Write-Output 'No GPU, firmware execution or private PROM in CI. 119 fixture scenarios are skipped here; local results are documented separately.'

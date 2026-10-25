@@ -1,0 +1,3 @@
+* text=auto eol=lf
+# Diagnostic vendor manifests hash the original CRLF header bytes.
+diagnostics/**/vendor/** text eol=crlf
