@@ -45,7 +45,7 @@ def main():
     if (digest(efi) != candidate_efi or manifest["EfiSha256"].lower() != candidate_efi
             or bool(manifest.get("DynamicEntrySs0")) != a.dynamic_entry_ss0
             or manifest["Mode"] != mode or manifest.get("HardwareUnlockTested") is not False):
-        parser.error("Only the reviewed, hardware-untested hardening candidate hash is packaged")
+        parser.error("Only the reviewed hardening candidate hash is packaged")
     for source in manifest["Sources"]:
         if digest(ROOT / "src" / source["Name"]) != source["Sha256"].lower():
             parser.error("Source changed since build")
@@ -78,7 +78,8 @@ def main():
     files = sorted(p for p in out.rglob("*") if p.is_file())
     (out / "SHA256SUMS.txt").write_text("".join(
         f"{digest(p)}  {p.relative_to(out).as_posix()}\n" for p in files), encoding="ascii")
-    print("Local hardening-candidate bundle verified; hardware execution remains untested. Contains separately licensed firmware; DO NOT upload this directory.")
+    status = "RUN05 hardware evidence exists for this dynamic hash" if a.dynamic_entry_ss0 else "fixed-SS0 hardware execution remains untested"
+    print(f"Local hardening-candidate bundle verified; {status}. Contains separately licensed firmware; DO NOT upload this directory.")
 
 if __name__ == "__main__":
     main()

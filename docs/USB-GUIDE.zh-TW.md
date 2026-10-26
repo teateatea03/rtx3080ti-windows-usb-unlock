@@ -19,4 +19,4 @@
 
 每次建立新 RUNxx，保留舊紀錄；硬體變動先診斷。備份既有 USB 內容，我們的 v1–v4 與歷次證據皆保留。
 
-動態版還應看到 **TRIAL DYNAMIC SS0**。目前 `main` 加入 service-boundary 強化但保留相同手動流程；重建 EFI 尚未實機執行，RUN04 證據屬於 v0.2 標籤版。拒絕時保留報告，不反覆重試。[動態模式](DYNAMIC-SS0.md)。
+動態版還應看到 **TRIAL DYNAMIC SS0**。目前 `main` 的 service-boundary 強化動態 EFI 已完成 RUN05，但仍只是一筆實機結果，不是安全或可重複保證；手動流程不變。拒絕時保留報告，不反覆重試。[動態模式](DYNAMIC-SS0.md)。

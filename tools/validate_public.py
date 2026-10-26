@@ -67,6 +67,35 @@ def main():
     assert "transaction result=0 containment=0 started=1 quiesced=1 fault=0 retained=0 maps=0 FLR=1" in report
     assert "SS0=88888888 SS1=00000007" in report
     assert report.rstrip().endswith("FINAL status=0 stage=transaction attempted=1 driver_release=0 clean=1")
+    hardened = json.loads((ROOT / "evidence/benchmark-run05.json").read_text())
+    for key in ("Gpu", "Bus", "CuBlasVersion", "CuBlasSha256", "BenchmarkScriptSha256"):
+        assert hardened[key] == before[key], key
+    for b, h in zip(before["Results"], hardened["Results"]):
+        for key in ("Input", "N", "Output", "Accumulation", "ComputeType", "MathMode",
+                    "Algorithm", "IterationsPerSample", "CheckedOutputElements", "ExactExpectedOutput"):
+            assert h[key] == b[key], key
+        assert statistics.median(h["SamplesTflops"]) == h["MedianTflops"]
+        assert h["MedianTflops"] / b["MedianTflops"] > 1.5
+        print(f'{h["Input"]} RUN05: {h["MedianTflops"]/b["MedianTflops"]:.6f}x')
+    report05_path = ROOT / "evidence/unlock-run05.txt"
+    report05 = report05_path.read_text()
+    assert text_hash(report05_path) == "f62160f90a58dcc6b68d6f3e59ec589bb447052ff629317eb0f883b9a6e41b91"
+    assert report05.count("bar0 query: status=0 rebound=0 free=0 final=0") == 2
+    assert report05.count("PNY dynamic preflight: SS0=0x24121116 SS1=0x7 FWSEC[8241e0]=0x3 strap[824148]=0x1") == 4
+    assert "transaction result=0 containment=0 started=1 quiesced=1 fault=0 retained=0 maps=0 FLR=1" in report05
+    assert "SS0=88888888 SS1=00000007" in report05
+    assert report05.rstrip().endswith("FINAL status=0 stage=transaction attempted=1 driver_release=0 clean=1")
+    health05 = json.loads((ROOT / "evidence/health-run05.json").read_text())
+    assert health05["ExplicitXmlTimeFilter"] and health05["RelevantCurrentBootEventCount"] == 0
+    assert len(health05["DisplayDevices"]) == 2
+    assert all(d["Status"] == "OK" and d["Problem"] == 0 for d in health05["DisplayDevices"])
+    publication05 = json.loads((ROOT / "evidence/publication-hardening-run05.json").read_text())
+    assert publication05["status"] == "hardware-success-observed"
+    assert publication05["run"]["report_sha256_lf"] == text_hash(report05_path)
+    assert publication05["run"]["final_status"] == 0 and publication05["run"]["clean"]
+    assert publication05["service_boundary"] == {
+        "bar_precheck_status": 0, "bar_return_recheck_status": 0,
+        "bar_free_status": 0, "bar_final_recheck_status": 0}
     for run in (1, 2, 3):
         refused = (ROOT / f"evidence/rejected-run0{run}.txt").read_text()
         assert "stage=diagnostic-cold-state attempted=0 driver_release=0 clean=1" in refused

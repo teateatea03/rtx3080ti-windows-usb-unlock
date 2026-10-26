@@ -5349,7 +5349,14 @@
     {
       "version": "unreleased-service-boundary-hardening",
       "upstream_design_revision": "849f99637a0e324161ad6fe12d77f7b668822512",
-      "hardware_tested": false,
+      "hardware_evidence": {
+        "dynamic_ss0_tested": true,
+        "fixed_ss0_tested": false,
+        "diagnostic_only_tested": false,
+        "run": "RUN05",
+        "efi_sha256": "b04ce9ff5b484c4dd069778ed8102199fbced2db977bef745041793632990844",
+        "report": "evidence/unlock-run05.txt"
+      },
       "source_updates": [
         {
           "path": "src/app.c",

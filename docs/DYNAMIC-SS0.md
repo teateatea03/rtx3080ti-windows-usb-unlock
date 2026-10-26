@@ -11,8 +11,9 @@ The original two-value SS0 filter rejected later boots. Explicit `GU_PNY_DYNAMIC
 | RUN02 | 24121117 | Original rejected, attempted=0, clean=1 |
 | RUN03 | 24121116 | Original rejected, attempted=0, clean=1 |
 | RUN04 | 24321117 | Dynamic transaction succeeded, attempted=1, clean=1 |
+| RUN05 | 24121116 | Hardened dynamic transaction succeeded; BAR lifetime rechecks and clean containment passed |
 
-[RUN01](../evidence/rejected-run01.txt) · [RUN02](../evidence/rejected-run02.txt) · [RUN03](../evidence/rejected-run03.txt) · [RUN04](../evidence/unlock-run04.txt) · [benchmark samples](../evidence/benchmark-run04.json)
+[RUN01](../evidence/rejected-run01.txt) · [RUN02](../evidence/rejected-run02.txt) · [RUN03](../evidence/rejected-run03.txt) · [RUN04](../evidence/unlock-run04.txt) · [RUN04 benchmark](../evidence/benchmark-run04.json) · [RUN05](../evidence/unlock-run05.txt) · [RUN05 benchmark](../evidence/benchmark-run05.json)
 
 Initial PCI config DWORDs matched and PROM checks passed. The physical cause of between-boot SS0 changes is unknown. A full Windows boot does not establish physical GPU power removal.
 
@@ -35,13 +36,13 @@ python tools/package_local.py --dynamic-entry-ss0 --assets .local/firmware/asset
 
 X must be the actual USB. Copy defaults to dry run; explicit `-Apply` copies files. Original mode omits the dynamic flag from all four steps. The public copier refuses an existing unlock directory; preserve reports and use another USB. The hardware-tested USB update used a separate private staging script with full payload backups; do not delete logs to bypass the public copier.
 
-225 dynamic / 126 fixed app/core simulations, default rejection, 32 compile selections and nine generic regression groups pass locally; CI has no private PROM/GPU. Current `main` produces the hardware-untested hardened dynamic candidate (67,072 bytes), SHA-256 `b04ce9ff5b484c4dd069778ed8102199fbced2db977bef745041793632990844`. The tagged v0.2 RUN04 EFI remains `0cf96d7ce5b81b87caf463b6ef4a2365b4785fb6d64273ee38a7d9f699e96845` and is the one with hardware evidence.
+225 dynamic / 126 fixed app/core simulations, default rejection, 32 compile selections and nine generic regression groups pass locally; CI has no private PROM/GPU. Current `main` hardened dynamic candidate (67,072 bytes), SHA-256 `b04ce9ff5b484c4dd069778ed8102199fbced2db977bef745041793632990844`, completed RUN05. The tagged v0.2 RUN04 EFI remains `0cf96d7ce5b81b87caf463b6ef4a2365b4785fb6d64273ee38a7d9f699e96845`; each dynamic binary has one successful hardware run.
 
 ## 繁體中文摘要與限制
 
 舊版兩值清單導致 RUN01–03 在解鎖前被拒絕。v0.2 需明確啟用動態模式：先驗卡片、PROM、冷狀態、fuse/相關寄存器與顯示路徑，重讀後才把當次初值記在 RAM；當次不得重新學習。這次 RUN04 初值又變為 24321117，但完整檢查後成功，SS1 保持7、清理完成，Windows GEMM約113 TFLOPS。
 
-這是動態版**一次實機成功**，不是所有初值、每次冷啟動、休眠喚醒、長時間穩定、遊戲或LLM加速保證。初值為何變動仍未知。沒有永久開機安裝；回復USB不等於回復GPU電源狀態。
+動態 v0.2 RUN04 與強化版 RUN05 各有**一次實機成功**，不是所有初值、每次冷啟動、休眠喚醒、長時間穩定、遊戲或LLM加速保證。初值為何變動仍未知。沒有永久開機安裝；回復USB不等於回復GPU電源狀態。
 
 上游方法：[entry latch](https://github.com/impacifist/Windows-GPU-UNLOCK/blob/e3f03cd9389195adcabda4743d8fc2922b32498c/internal-boot/unlock/port.c#L15)、
 [cold checks](https://github.com/impacifist/Windows-GPU-UNLOCK/blob/e3f03cd9389195adcabda4743d8fc2922b32498c/internal-boot/unlock/app.c#L262)。

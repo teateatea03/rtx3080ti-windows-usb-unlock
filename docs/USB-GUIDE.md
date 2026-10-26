@@ -17,4 +17,4 @@ Cancellation/rejection: inspect logs before retrying.
 
 Full shutdown, PSU off/unplug ~10 seconds, boot Windows directly without USB selection. Warm reboot + skipping USB does not prove cleared state. A measured cold-restore round-trip is not yet completed. Keep prior USB files and logs backed up; changed hardware needs new diagnostics.
 
-For dynamic mode expect **TRIAL DYNAMIC SS0**. Current `main` adds service-boundary hardening but retains this manual flow; its rebuilt EFI is a hardware-untested candidate, while RUN04 belongs to tagged v0.2. A rejection means preserve the report, not repeat blindly. [Policy](DYNAMIC-SS0.md).
+For dynamic mode expect **TRIAL DYNAMIC SS0**. Current `main` service-boundary-hardened dynamic EFI completed RUN05 but retains this manual flow and is still a one-run result, not a safety or repeatability guarantee. A rejection means preserve the report, not repeat blindly. [Policy](DYNAMIC-SS0.md).

@@ -1,0 +1,54 @@
+{
+  "status": "hardware-success-observed",
+  "source_commit": "49af6af347fcb65de9fc93a244b1c12c2638ce48",
+  "mode": "experimental-dynamic-ss0-preserve-ss1",
+  "efi": {
+    "sha256": "b04ce9ff5b484c4dd069778ed8102199fbced2db977bef745041793632990844",
+    "bytes": 67072,
+    "imports": 0,
+    "nx": true,
+    "dynamic_base": true
+  },
+  "run": {
+    "name": "RUN05",
+    "initial_ss0": "24121116",
+    "final_ss0": "88888888",
+    "ss1_before_after": "7",
+    "flr_count": 1,
+    "final_status": 0,
+    "clean": true,
+    "fault": false,
+    "retained": false,
+    "remaining_dma_mappings": 0,
+    "report_sha256_lf": "f62160f90a58dcc6b68d6f3e59ec589bb447052ff629317eb0f883b9a6e41b91"
+  },
+  "service_boundary": {
+    "bar_precheck_status": 0,
+    "bar_return_recheck_status": 0,
+    "bar_free_status": 0,
+    "bar_final_recheck_status": 0
+  },
+  "local_simulation": {
+    "fixed_scenarios": 126,
+    "dynamic_scenarios": 225,
+    "compile_policy_cases": 32
+  },
+  "windows": {
+    "both_display_devices_ok": true,
+    "relevant_current_boot_events": 0,
+    "explicit_xml_time_filter": true
+  },
+  "benchmark": {
+    "file": "evidence/benchmark-run05.json",
+    "fp16_median_tflops": 113.33563289656595,
+    "bf16_median_tflops": 113.40746357757872,
+    "checked_output_elements_per_type": 16777216,
+    "private_original_sha256": "0e16f232ea1eddf1483743e740d847b1582a47ae6ae450033b39e93cf47acd28"
+  },
+  "limits": [
+    "One successful hardware run of this hardening EFI.",
+    "Constant-input GEMM, no model/application/endurance claim.",
+    "Fixed-SS0 and diagnostic-only hardening binaries remain hardware-untested.",
+    "Raw private device identifiers and local paths excluded."
+  ]
+}

@@ -1,12 +1,23 @@
 # Measured results and evidence limits
 
-See [hardware](../README.md). Original RUN00 and dynamic RUN04 succeeded; RUN01–03 were rejected before unlocking. Publication builds perform no GPU attempt. Original RUN00 evidence below is preserved; [RUN04 details](DYNAMIC-SS0.md) add one dynamic success.
+See [hardware](../README.md). Original RUN00, dynamic RUN04 and hardened dynamic RUN05 succeeded; RUN01–03 were rejected before unlocking. Publication builds perform no GPU attempt. Original RUN00 and [RUN04](DYNAMIC-SS0.md) evidence remain preserved below.
 
-## Current main hardening candidates
+## Current main hardening RUN05
 
-Service-boundary hardening changed the binaries. Current `main` builds a 67,072-byte fixed-SS0 candidate (`4fd4143b57acbdbd68e57a3b792bcebcf73f5b48612ea788b47347338c9b1167`) and a 67,072-byte dynamic-SS0 candidate (`b04ce9ff5b484c4dd069778ed8102199fbced2db977bef745041793632990844`). Both pass PE and simulated fixture checks but have not been executed on the physical GPU. The RUN00/RUN04 results below apply only to their earlier tagged hashes.
+Service-boundary hardening changed the binaries. The 67,072-byte dynamic-SS0 candidate `b04ce9ff5b484c4dd069778ed8102199fbced2db977bef745041793632990844` completed [RUN05](../evidence/unlock-run05.txt); the fixed-SS0 and diagnostic-only candidates remain hardware-untested.
 
-## UEFI
+RUN05 began with SS0=`24121116`, passed both `bar0 query: status=0 rebound=0 free=0 final=0` checks, reached SS0=`88888888` with SS1=`7`, one FLR, `fault=0`, `retained=0`, `maps=0`, restored Command/Attributes and `FINAL status=0 ... clean=1`. Report SHA-256 (LF): `f62160f90a58dcc6b68d6f3e59ec589bb447052ff629317eb0f883b9a6e41b91`.
+
+[Benchmark samples](../evidence/benchmark-run05.json) · [Windows health](../evidence/health-run05.json) · [publication summary](../evidence/publication-hardening-run05.json)
+
+| Input | Original stock TFLOPS | RUN05 TFLOPS | Ratio |
+| --- | ---: | ---: | ---: |
+| FP16 | 59.717350 | 113.335633 | 1.897868× |
+| BF16 | 69.917815 | 113.407464 | 1.622011× |
+
+Every one of 16,777,216 outputs per type equalled 4096. Both display devices were PNP OK and explicit XML-time filtering found zero new Display/nvlddmkm/WHEA events from boot through the bounded observation. One hardware run and constant-input GEMM do not establish repeatability, endurance or application speed.
+
+## Original RUN00 UEFI
 
 - FWSEC raw 3/version 2/signature offset 768; running → halted; scratch 0.
 - SS0 became `88888888`, SS1 remained `7` without SS1 writes.

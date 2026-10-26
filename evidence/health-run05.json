@@ -1,0 +1,24 @@
+{
+  "BootTime": "2026-10-26T15:18:08.5000000+08:00",
+  "ObservedUntil": "2026-10-26T15:25:15.9622313+08:00",
+  "ExplicitXmlTimeFilter": true,
+  "RelevantProviders": [
+    "Display",
+    "nvlddmkm",
+    "Microsoft-Windows-WHEA-Logger"
+  ],
+  "RelevantCurrentBootEventCount": 0,
+  "DisplayDevices": [
+    {
+      "FriendlyName": "NVIDIA GeForce RTX 5080",
+      "Status": "OK",
+      "Problem": 0
+    },
+    {
+      "FriendlyName": "NVIDIA GeForce RTX 3080 Ti",
+      "Status": "OK",
+      "Problem": 0
+    }
+  ],
+  "Limits": "Specified System providers only, bounded observation since this boot; no long-duration stability proof. Device instance IDs and unrelated historical events excluded."
+}

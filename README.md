@@ -6,14 +6,14 @@ A free, GPL-2.0-only research port for **one measured PNY RTX 3080 Ti / ASRock B
 
 **v0.2.0-experimental adds explicit dynamic SS0 entry latching.** It validates this boot's initial value, remembers it for this invocation, and rejects later changes. The non-writing default and original two-value experimental mode remain available.
 
-**Current `main` adds unreleased service-boundary hardening.** BAR queries now revalidate the target handle, PciIo interface, BDF and full PCI snapshot across allocation and release callbacks. These rebuilt candidates are not yet hardware-tested; RUN00/RUN04 remain evidence for the earlier tagged builds.
+**Current `main` adds unreleased service-boundary hardening.** BAR queries now revalidate the target handle, PciIo interface, BDF and full PCI snapshot across allocation and release callbacks. The dynamic candidate completed RUN05 on the measured hardware; the fixed-SS0 and diagnostic-only hardening binaries remain hardware-untested.
 
-Two successful hardware transactions on this machine: original RUN00 and dynamic RUN04. RUN01–03 were rejected before any unlock attempt. FP32-accumulating cuBLAS GEMM:
+Three successful hardware transactions on this machine: original RUN00, v0.2 dynamic RUN04 and hardened dynamic RUN05. RUN01–03 were rejected before any unlock attempt. FP32-accumulating cuBLAS GEMM:
 
-| Input → FP32 output | Stock | Original RUN00 | Dynamic RUN04 |
-| --- | ---: | ---: | ---: |
-| FP16 | 59.717 TFLOPS | 114.491 TFLOPS | 113.321 TFLOPS (1.898× stock) |
-| BF16 | 69.918 TFLOPS | 114.442 TFLOPS | 113.168 TFLOPS (1.619× stock) |
+| Input → FP32 output | Stock | Original RUN00 | Dynamic RUN04 | Hardened RUN05 |
+| --- | ---: | ---: | ---: | ---: |
+| FP16 | 59.717 TFLOPS | 114.491 TFLOPS | 113.321 TFLOPS (1.898×) | 113.336 TFLOPS (1.898×) |
+| BF16 | 69.918 TFLOPS | 114.442 TFLOPS | 113.168 TFLOPS (1.619×) | 113.407 TFLOPS (1.622×) |
 
 This is a constant-input 4096³ GEMM measurement, not an application benchmark or long-term stability result. All 16,777,216 outputs per type were exactly 4096. [Parameters, evidence and limits](docs/RESULTS.md).
 
@@ -47,7 +47,7 @@ Source, licenses, redacted measured evidence and reproduction scripts are public
 
 ## Validation and source
 
-Current `main` builds reviewed, hardware-untested candidates: fixed SS0 `4fd4143b57acbdbd68e57a3b792bcebcf73f5b48612ea788b47347338c9b1167` and dynamic SS0 `b04ce9ff5b484c4dd069778ed8102199fbced2db977bef745041793632990844`, both 67,072 bytes. The older hardware-tested hashes remain documented under their release/result sections and are not relabeled as current evidence.
+Current `main` builds 67,072-byte candidates: fixed SS0 `4fd4143b57acbdbd68e57a3b792bcebcf73f5b48612ea788b47347338c9b1167` remains hardware-untested; dynamic SS0 `b04ce9ff5b484c4dd069778ed8102199fbced2db977bef745041793632990844` completed RUN05 with clean UEFI containment, both Windows display devices OK and matched matrix throughput. [RUN05 evidence and limits](docs/RESULTS.md#current-main-hardening-run05).
 
 Local validation: 225 dynamic / 126 fixed simulated app/core scenarios plus non-writing default cases; 9 fixture-independent regression groups; 32 compile-policy cases; diagnostic v4 60 scenarios and 5 invalid-report cases; PE checks and offline firmware reconstruction. CI has no GPU or private PROM and explicitly skips fixture-dependent tests. Host tests cannot prove firmware authentication or hardware behavior.
 

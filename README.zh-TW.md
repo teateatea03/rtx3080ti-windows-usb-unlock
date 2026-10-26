@@ -6,14 +6,14 @@
 
 **v0.2.0-experimental 新增動態 SS0 初值鎖定**：完整驗證後記住當次初值，同一次執行若改變就拒絕。需明確加上 `-DynamicEntrySs0`；預設非寫入模式與原本兩值模式都保留。
 
-**目前 `main` 另加入尚未發版的 service-boundary 強化**：BAR 查詢配置／釋放 callback 前後重新核對 target handle、PciIo、BDF 與完整 PCI snapshot。本次重建候選尚未實機執行；RUN00／RUN04 仍只證明較早的標籤版本。
+**目前 `main` 另加入尚未發版的 service-boundary 強化**：BAR 查詢配置／釋放 callback 前後重新核對 target handle、PciIo、BDF 與完整 PCI snapshot。動態候選已完成 RUN05 實機驗證；固定 SS0 與 diagnostic-only 強化版仍未實機執行。
 
-| FP32 累加／輸出 | 原廠基準 | 原版 RUN00 | 動態版 RUN04 |
-| --- | ---: | ---: | ---: |
-| FP16 輸入 | 59.717 TFLOPS | 114.491 TFLOPS | 113.321 TFLOPS（1.898 倍） |
-| BF16 輸入 | 69.918 TFLOPS | 114.442 TFLOPS | 113.168 TFLOPS（1.619 倍） |
+| FP32 累加／輸出 | 原廠基準 | 原版 RUN00 | 動態版 RUN04 | 強化版 RUN05 |
+| --- | ---: | ---: | ---: | ---: |
+| FP16 輸入 | 59.717 TFLOPS | 114.491 TFLOPS | 113.321 TFLOPS（1.898 倍） | 113.336 TFLOPS（1.898 倍） |
+| BF16 輸入 | 69.918 TFLOPS | 114.442 TFLOPS | 113.168 TFLOPS（1.619 倍） | 113.407 TFLOPS（1.622 倍） |
 
-目前同機有兩次成功：原版 RUN00、動態版 RUN04。RUN01–03 在解鎖前被拒絕；**動態版只有一次實機成功**，未證明每種初值／每次啟動都可用。測試為全 1 輸入的 4096³ cuBLAS GEMM。每種資料型態 16,777,216 個輸出皆精確等於 4096；這不代表所有模型推論、遊戲或長時間工作都獲得同樣提升。
+目前同機有三次成功：原版 RUN00、動態版 RUN04、強化動態版 RUN05。RUN01–03 在解鎖前被拒絕；兩個動態二進位各有一次實機成功，仍未證明每種初值／每次啟動都可用。測試為全 1 輸入的 4096³ cuBLAS GEMM。每種資料型態 16,777,216 個輸出皆精確等於 4096；這不代表所有模型推論、遊戲或長時間工作都獲得同樣提升。
 
 ## 適用範圍
 
@@ -34,7 +34,7 @@
 3. [踩坑紀錄](docs/PITFALLS.zh-TW.md)：錯讀 fuse、SS0 變動、EFI Attributes、ROM 格式、事件誤判等。
 4. [實測與限制](docs/RESULTS.md)、[原作者與固定版本](docs/REFERENCES.md)、[授權邊界](THIRD_PARTY_NOTICES.md)。
 
-目前 `main` 的兩個已審查、尚未實機執行候選皆為 67,072 bytes：固定 SS0 `4fd4143b57acbdbd68e57a3b792bcebcf73f5b48612ea788b47347338c9b1167`；動態 SS0 `b04ce9ff5b484c4dd069778ed8102199fbced2db977bef745041793632990844`。較早成功實測版的 hash 保留在版本／結果段落，不混稱為本版證據。
+目前 `main` 的兩個候選皆為 67,072 bytes：固定 SS0 `4fd4143b57acbdbd68e57a3b792bcebcf73f5b48612ea788b47347338c9b1167` 尚未實機執行；動態 SS0 `b04ce9ff5b484c4dd069778ed8102199fbced2db977bef745041793632990844` 已完成 RUN05，UEFI 清理、Windows 兩卡狀態與匹配矩陣效能皆通過。[RUN05 證據與限制](docs/RESULTS.md#current-main-hardening-run05)。
 
 本機通過動態版 225／固定版 126 個 app/core 模擬情境、預設非寫入案例、9 組通用回歸、32 組編譯限制、診斷 v4 的 60 個情境及 5 個錯誤報告拒絕測試。模擬不等於實機韌體驗證；CI 沒有顯卡與私有 PROM，會明確略過。
 
