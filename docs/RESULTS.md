@@ -2,6 +2,10 @@
 
 See [hardware](../README.md). Original RUN00 and dynamic RUN04 succeeded; RUN01–03 were rejected before unlocking. Publication builds perform no GPU attempt. Original RUN00 evidence below is preserved; [RUN04 details](DYNAMIC-SS0.md) add one dynamic success.
 
+## Current main hardening candidates
+
+Service-boundary hardening changed the binaries. Current `main` builds a 67,072-byte fixed-SS0 candidate (`4fd4143b57acbdbd68e57a3b792bcebcf73f5b48612ea788b47347338c9b1167`) and a 67,072-byte dynamic-SS0 candidate (`b04ce9ff5b484c4dd069778ed8102199fbced2db977bef745041793632990844`). Both pass PE and simulated fixture checks but have not been executed on the physical GPU. The RUN00/RUN04 results below apply only to their earlier tagged hashes.
+
 ## UEFI
 
 - FWSEC raw 3/version 2/signature offset 768; running → halted; scratch 0.

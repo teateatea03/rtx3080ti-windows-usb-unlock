@@ -6,8 +6,8 @@ import json
 import shutil
 
 ROOT = Path(__file__).resolve().parents[1]
-TESTED_EFI = "197602679e4574a5993e5ea6f963e128a7662ccaa1a382c2c2b29838e3a4bb08"
-DYNAMIC_EFI = "0cf96d7ce5b81b87caf463b6ef4a2365b4785fb6d64273ee38a7d9f699e96845"
+FIXED_CANDIDATE_EFI = "4fd4143b57acbdbd68e57a3b792bcebcf73f5b48612ea788b47347338c9b1167"
+DYNAMIC_CANDIDATE_EFI = "b04ce9ff5b484c4dd069778ed8102199fbced2db977bef745041793632990844"
 PROM = "991cbe4878a4c6f0456b6412ffff3dab5e7f60ec317ba4539254eb52b692f140"
 
 def digest(path):
@@ -20,7 +20,7 @@ def main():
     parser.add_argument("--diagnostic-summary", type=Path, required=True,
                         help="Local v4 Read-Run summary; not a substitute for physical cold boot")
     parser.add_argument("--output", type=Path, required=True, help="New directory under .local")
-    parser.add_argument('--dynamic-entry-ss0', action='store_true', help='Explicit v0.2 dynamic entry latch; all other exact-card guards retained')
+    parser.add_argument('--dynamic-entry-ss0', action='store_true', help='Explicit dynamic entry latch; all exact-card and service-boundary guards retained')
     a = parser.parse_args()
     out = a.output.resolve()
     if out.exists() or not out.is_relative_to(ROOT / ".local"):
@@ -38,19 +38,21 @@ def main():
     if not (regs.get(0x8241e0) == 3 and regs.get(0x824148) == 1 and regs.get(0x823820) == 7 and selector_ok):
         parser.error("Wrong FWSEC or stock selector evidence")
     mode = "experimental-dynamic-ss0-preserve-ss1" if a.dynamic_entry_ss0 else "experimental-preserve-ss1"
-    tested_efi = DYNAMIC_EFI if a.dynamic_entry_ss0 else TESTED_EFI
+    candidate_efi = DYNAMIC_CANDIDATE_EFI if a.dynamic_entry_ss0 else FIXED_CANDIDATE_EFI
     build = ROOT / "src/build/pny3080ti" / mode
     efi = build / "PNY3080TI.EFI"
     manifest = json.loads((build / "build-manifest.json").read_text(encoding="utf-8-sig"))
-    if digest(efi) != tested_efi or manifest["EfiSha256"].lower() != tested_efi or bool(manifest.get("DynamicEntrySs0")) != a.dynamic_entry_ss0 or manifest["Mode"] != mode:
-        parser.error("Only the reproduced, hardware-tested EFI hash is packaged")
+    if (digest(efi) != candidate_efi or manifest["EfiSha256"].lower() != candidate_efi
+            or bool(manifest.get("DynamicEntrySs0")) != a.dynamic_entry_ss0
+            or manifest["Mode"] != mode or manifest.get("HardwareUnlockTested") is not False):
+        parser.error("Only the reviewed, hardware-untested hardening candidate hash is packaged")
     for source in manifest["Sources"]:
         if digest(ROOT / "src" / source["Name"]) != source["Sha256"].lower():
             parser.error("Source changed since build")
     tests = ROOT / "src/build/tests" / ("pny3080ti-dynamic-ss0" if a.dynamic_entry_ss0 else "pny3080ti")
     result = json.loads((tests / "pny-host-results.json").read_text(encoding="utf-8-sig"))
     logs = [p for p in tests.glob("pny-host-*.log") if digest(p) == result["LogSha256"].lower()]
-    expected_count = 221 if a.dynamic_entry_ss0 else 122
+    expected_count = 225 if a.dynamic_entry_ss0 else 126
     if not result["AllPassed"] or bool(result.get("DynamicEntrySs0")) != a.dynamic_entry_ss0 or digest(tests / "pny-tests.exe") != result["TestExeSha256"].lower() or not any(f"{expected_count} PNY actual app/core scenarios passed" in p.read_text(encoding="utf-16" if p.read_bytes().startswith(b"\xff\xfe") else "utf-8-sig") for p in logs):
         parser.error("Run the full fixture tests first")
     assets = json.loads((ROOT / "src/assets.json").read_text())
@@ -76,7 +78,7 @@ def main():
     files = sorted(p for p in out.rglob("*") if p.is_file())
     (out / "SHA256SUMS.txt").write_text("".join(
         f"{digest(p)}  {p.relative_to(out).as_posix()}\n" for p in files), encoding="ascii")
-    print("Local file bundle verified. Contains separately licensed firmware; DO NOT upload this directory.")
+    print("Local hardening-candidate bundle verified; hardware execution remains untested. Contains separately licensed firmware; DO NOT upload this directory.")
 
 if __name__ == "__main__":
     main()

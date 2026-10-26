@@ -6,6 +6,8 @@ A free, GPL-2.0-only research port for **one measured PNY RTX 3080 Ti / ASRock B
 
 **v0.2.0-experimental adds explicit dynamic SS0 entry latching.** It validates this boot's initial value, remembers it for this invocation, and rejects later changes. The non-writing default and original two-value experimental mode remain available.
 
+**Current `main` adds unreleased service-boundary hardening.** BAR queries now revalidate the target handle, PciIo interface, BDF and full PCI snapshot across allocation and release callbacks. These rebuilt candidates are not yet hardware-tested; RUN00/RUN04 remain evidence for the earlier tagged builds.
+
 Two successful hardware transactions on this machine: original RUN00 and dynamic RUN04. RUN01–03 were rejected before any unlock attempt. FP32-accumulating cuBLAS GEMM:
 
 | Input → FP32 output | Stock | Original RUN00 | Dynamic RUN04 |
@@ -45,11 +47,9 @@ Source, licenses, redacted measured evidence and reproduction scripts are public
 
 ## Validation and source
 
-The public build still reproduces the original successful 66,048-byte EFI exactly:
+Current `main` builds reviewed, hardware-untested candidates: fixed SS0 `4fd4143b57acbdbd68e57a3b792bcebcf73f5b48612ea788b47347338c9b1167` and dynamic SS0 `b04ce9ff5b484c4dd069778ed8102199fbced2db977bef745041793632990844`, both 67,072 bytes. The older hardware-tested hashes remain documented under their release/result sections and are not relabeled as current evidence.
 
-`197602679e4574a5993e5ea6f963e128a7662ccaa1a382c2c2b29838e3a4bb08`
-
-Local validation: 221 dynamic / 122 original simulated app/core scenarios plus non-writing default cases; 9 fixture-independent regression groups; 32 compile-policy cases; diagnostic v4 60 scenarios and 5 invalid-report cases; PE checks and offline firmware reconstruction. CI has no GPU or private PROM and explicitly skips fixture-dependent tests. Host tests cannot prove firmware authentication or hardware behavior.
+Local validation: 225 dynamic / 126 fixed simulated app/core scenarios plus non-writing default cases; 9 fixture-independent regression groups; 32 compile-policy cases; diagnostic v4 60 scenarios and 5 invalid-report cases; PE checks and offline firmware reconstruction. CI has no GPU or private PROM and explicitly skips fixture-dependent tests. Host tests cannot prove firmware authentication or hardware behavior.
 
 This port builds on impacifist, rough2515-hub, Zagitta and WildFlash1st. See [pinned references](docs/REFERENCES.md), [licenses](THIRD_PARTY_NOTICES.md), [changes](docs/CHANGES-PNY.md). Original authors retain copyrights. There is no fee/paywall; GPL permits commercial redistribution under its conditions.
 
@@ -58,6 +58,6 @@ This port builds on impacifist, rough2515-hub, Zagitta and WildFlash1st. See [pi
 ## v0.2 dynamic result
 
 [Dynamic policy, rejected boots and RUN04](docs/DYNAMIC-SS0.md).
-The public build reproduces the 66,560-byte RUN04 EFI:
+The tagged v0.2 source reproduces the 66,560-byte RUN04 EFI:
 `0cf96d7ce5b81b87caf463b6ef4a2365b4785fb6d64273ee38a7d9f699e96845`.
 Dynamic mode has **one successful hardware run**; this does not prove every initial value or boot works.

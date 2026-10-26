@@ -23,7 +23,7 @@ lld-link --version
 .\Build.ps1
 ~~~
 
-這些只在主機編譯／模擬，不會碰 GPU。第一個跑 9 組回歸與 32 組編譯限制，未提供 `-Prom` 會明確略過 122／221 情境與 fixture 預設模式測試。第二個建置獨立診斷 v4、跑 60 情境與 5 種錯誤報告。預設 Build 產物是 `src/build/pny3080ti/diagnostic-only/PNY3080TI.EFI`，無法 arm GPU 寫入／DMA／reset；它與獨立診斷 v4 不同，執行時仍需相同 app 資料目錄。
+這些只在主機編譯／模擬，不會碰 GPU。第一個跑 9 組回歸與 32 組編譯限制，未提供 `-Prom` 會明確略過固定版 126／動態版 225 情境與 fixture 預設模式測試。第二個建置獨立診斷 v4、跑 60 情境與 5 種錯誤報告。預設 Build 產物是 `src/build/pny3080ti/diagnostic-only/PNY3080TI.EFI`，無法 arm GPU 寫入／DMA／reset；它與獨立診斷 v4 不同，執行時仍需相同 app 資料目錄。
 
 ## 2. 診斷 v4 與私人擷取
 
@@ -68,11 +68,11 @@ PROM 雜湊綁定本案實測卡，不符就調查，不要改雜湊強迫過關
 .\Build.ps1 -Experimental
 ~~~
 
-122 個原版 app/core 情境仍是模擬，另驗預設拒絕寫入。實驗 EFI 應 66,048 bytes、SHA-256 `197602679e4574a5993e5ea6f963e128a7662ccaa1a382c2c2b29838e3a4bb08`。PE 檢查排除 imports、可寫又可執行區段；新編譯不代表新實機驗證。
+目前 `main` 預期固定版 126 個 app/core 模擬情境，另驗預設拒絕寫入。強化後固定 SS0 候選應為 67,072 bytes、SHA-256 `4fd4143b57acbdbd68e57a3b792bcebcf73f5b48612ea788b47347338c9b1167`。PE 檢查排除 imports、可寫又可執行區段；本候選尚未實機執行，較早 66,048-byte hash 屬於 RUN00 時期標籤版本。
 
 ## 5. 本機 USB 資料樹
 
-封裝核對 v4 完整／回復、PROM、selector/fuse、122個原版測試紀錄、source/EFI/asset 雜湊。
+封裝核對 v4 完整／回復、PROM、selector/fuse、126 個固定版測試紀錄、source/EFI/asset 雜湊。
 
 ~~~powershell
 python tools/package_local.py --assets .local/firmware/assets --diagnostic-summary .local/assessment/RUN0003.TXT.summary.json --output .local/usb

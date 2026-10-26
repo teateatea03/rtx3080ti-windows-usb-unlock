@@ -23,7 +23,7 @@ lld-link --version
 .\Build.ps1
 ~~~
 
-These are host builds/tests, not GPU execution. Test.ps1 runs 9 generic groups and 32 compile cases; without `-Prom` it explicitly skips 122 static / 221 dynamic fixture scenarios and the fixture-dependent default-mode test. Test-Diagnostic builds/checks v4, runs 60 scenarios and 5 invalid-report cases. Default Build creates `src/build/pny3080ti/diagnostic-only/PNY3080TI.EFI`; it cannot arm GPU writes/DMA/reset. It differs from the independent v4 inventory probe, and needs the same app data tree to run.
+These are host builds/tests, not GPU execution. Test.ps1 runs 9 generic groups and 32 compile cases; without `-Prom` it explicitly skips 126 fixed / 225 dynamic fixture scenarios and the fixture-dependent default-mode test. Test-Diagnostic builds/checks v4, runs 60 scenarios and 5 invalid-report cases. Default Build creates `src/build/pny3080ti/diagnostic-only/PNY3080TI.EFI`; it cannot arm GPU writes/DMA/reset. It differs from the independent v4 inventory probe, and needs the same app data tree to run.
 
 ## 2. Independent diagnostic v4 and private evidence
 
@@ -68,7 +68,7 @@ The PROM hash is deliberately pinned to the measured card. If yours differs, sto
 .\Build.ps1 -Experimental
 ~~~
 
-Expected: 122 original-mode app/core scenarios (simulated) plus default-mode rejection case. The experimental EFI must be 66,048 bytes and hash `197602679e4574a5993e5ea6f963e128a7662ccaa1a382c2c2b29838e3a4bb08`. PE verification rejects imports and writable/executable sections. Build manifests identify source hashes; a new build alone is not a new hardware validation.
+Expected on current `main`: 126 fixed-mode app/core scenarios (simulated) plus the default-mode rejection case. The hardened fixed-SS0 candidate must be 67,072 bytes and hash `4fd4143b57acbdbd68e57a3b792bcebcf73f5b48612ea788b47347338c9b1167`. PE verification rejects imports and writable/executable sections. This candidate is not hardware-tested; the older 66,048-byte hash belongs to the tagged RUN00-era build.
 
 ## 5. Local USB file bundle
 

@@ -35,7 +35,7 @@ foreach($line in Get-Content -LiteralPath (Join-Path $Bundle 'SHA256SUMS.txt')){
  $entries+=,[pscustomobject]@{Relative=$relative;Source=$src;Hash=$hash}
 }
 $boot=@($entries|Where-Object {$_.Relative -eq 'EFI/BOOT/BOOTX64.EFI'})
-$expectedEfi=if($DynamicEntrySs0){'0cf96d7ce5b81b87caf463b6ef4a2365b4785fb6d64273ee38a7d9f699e96845'}else{'197602679e4574a5993e5ea6f963e128a7662ccaa1a382c2c2b29838e3a4bb08'}
+$expectedEfi=if($DynamicEntrySs0){'b04ce9ff5b484c4dd069778ed8102199fbced2db977bef745041793632990844'}else{'4fd4143b57acbdbd68e57a3b792bcebcf73f5b48612ea788b47347338c9b1167'}
 if($boot.Count -ne 1 -or $boot[0].Hash -ne $expectedEfi){throw 'Wrong experimental EFI'}
 [pscustomobject]@{Drive=$root;DiskNumber=$disk.Number;Model=$disk.FriendlyName;FileSystem=$volume.FileSystem;Apply=[bool]$Apply;Files=$entries.Count}
 if(!$Apply){'Dry run only. Review the drive and bundle; -Apply copies files.';return}

@@ -35,7 +35,7 @@ python tools/package_local.py --dynamic-entry-ss0 --assets .local/firmware/asset
 
 X must be the actual USB. Copy defaults to dry run; explicit `-Apply` copies files. Original mode omits the dynamic flag from all four steps. The public copier refuses an existing unlock directory; preserve reports and use another USB. The hardware-tested USB update used a separate private staging script with full payload backups; do not delete logs to bypass the public copier.
 
-221 dynamic / 122 original app/core simulations, default rejection, 32 compile selections and nine generic regression groups pass locally; CI has no private PROM/GPU. Public build reproduces RUN04 EFI (66,560 bytes), SHA-256 `0cf96d7ce5b81b87caf463b6ef4a2365b4785fb6d64273ee38a7d9f699e96845`. Original EFI is unchanged.
+225 dynamic / 126 fixed app/core simulations, default rejection, 32 compile selections and nine generic regression groups pass locally; CI has no private PROM/GPU. Current `main` produces the hardware-untested hardened dynamic candidate (67,072 bytes), SHA-256 `b04ce9ff5b484c4dd069778ed8102199fbced2db977bef745041793632990844`. The tagged v0.2 RUN04 EFI remains `0cf96d7ce5b81b87caf463b6ef4a2365b4785fb6d64273ee38a7d9f699e96845` and is the one with hardware evidence.
 
 ## 繁體中文摘要與限制
 

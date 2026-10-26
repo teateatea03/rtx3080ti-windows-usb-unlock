@@ -6,6 +6,8 @@
 
 **v0.2.0-experimental 新增動態 SS0 初值鎖定**：完整驗證後記住當次初值，同一次執行若改變就拒絕。需明確加上 `-DynamicEntrySs0`；預設非寫入模式與原本兩值模式都保留。
 
+**目前 `main` 另加入尚未發版的 service-boundary 強化**：BAR 查詢配置／釋放 callback 前後重新核對 target handle、PciIo、BDF 與完整 PCI snapshot。本次重建候選尚未實機執行；RUN00／RUN04 仍只證明較早的標籤版本。
+
 | FP32 累加／輸出 | 原廠基準 | 原版 RUN00 | 動態版 RUN04 |
 | --- | ---: | ---: | ---: |
 | FP16 輸入 | 59.717 TFLOPS | 114.491 TFLOPS | 113.321 TFLOPS（1.898 倍） |
@@ -32,10 +34,9 @@
 3. [踩坑紀錄](docs/PITFALLS.zh-TW.md)：錯讀 fuse、SS0 變動、EFI Attributes、ROM 格式、事件誤判等。
 4. [實測與限制](docs/RESULTS.md)、[原作者與固定版本](docs/REFERENCES.md)、[授權邊界](THIRD_PARTY_NOTICES.md)。
 
-公開版重新編譯得到的 EFI 與成功實測版完全一致：
-`197602679e4574a5993e5ea6f963e128a7662ccaa1a382c2c2b29838e3a4bb08`。
+目前 `main` 的兩個已審查、尚未實機執行候選皆為 67,072 bytes：固定 SS0 `4fd4143b57acbdbd68e57a3b792bcebcf73f5b48612ea788b47347338c9b1167`；動態 SS0 `b04ce9ff5b484c4dd069778ed8102199fbced2db977bef745041793632990844`。較早成功實測版的 hash 保留在版本／結果段落，不混稱為本版證據。
 
-本機通過動態版 221／原版 122 個 app/core 模擬情境、預設非寫入案例、9 組通用回歸、32 組編譯限制、診斷 v4 的 60 個情境及 5 個錯誤報告拒絕測試。模擬不等於實機韌體驗證；CI 沒有顯卡與私有 PROM，會明確略過。
+本機通過動態版 225／固定版 126 個 app/core 模擬情境、預設非寫入案例、9 組通用回歸、32 組編譯限制、診斷 v4 的 60 個情境及 5 個錯誤報告拒絕測試。模擬不等於實機韌體驗證；CI 沒有顯卡與私有 PROM，會明確略過。
 
 **不散布 NVIDIA 韌體、ROM/PROM、CUDA DLL、GPU UUID 或私有識別。** 韌體由腳本在本機取得並核對 SHA-256；release EFI 不是完整映像。原作者著作權與第三方授權保留，沒有付費牆；免費公開不代表可把第三方韌體改授權。
 
@@ -44,6 +45,6 @@
 ## v0.2 動態版
 
 [新初值、拒絕紀錄與 RUN04 詳細結果](docs/DYNAMIC-SS0.md)。
-公開重編譯與 RUN04 實測版完全相同，66,560 bytes：
+`v0.2.0-experimental` 標籤重編譯與 RUN04 實測版完全相同，66,560 bytes：
 `0cf96d7ce5b81b87caf463b6ef4a2365b4785fb6d64273ee38a7d9f699e96845`。
 `-Experimental -DynamicEntrySs0` 選動態版；只有 `-Experimental` 仍是原版。
