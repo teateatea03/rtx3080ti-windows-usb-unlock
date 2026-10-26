@@ -15,7 +15,8 @@ enum pny_fault {
  P_ENABLE_ERROR,P_ENABLE_EXTRA,P_ENABLE_CONFIG,P_DISABLE_ERROR,P_RESTORE_CONFIG,
  P_OWNER,P_OWNER_SELF_MISSING,P_OWNER_SELF_EXTRA,P_READ_ERROR,
  P_SS0,P_SS1,P_MEMORY,P_WARM,P_FUSE,P_DISPLAY_LATE,P_DISPLAY_FINAL,
- P_KEY_SS0,P_KEY_SS1,P_LOG_ENABLE,P_LOG_RESTORE,P_ATTR_GET_AFTER,P_COUNT
+ P_KEY_SS0,P_KEY_SS1,P_LOG_ENABLE,P_LOG_RESTORE,P_ATTR_GET_AFTER,
+ P_BAR_RETURN_CONFIG,P_BAR_FREE_CONFIG,P_BAR_REBIND,P_BAR_FREE_ERROR,P_COUNT
 };
 static const char *pny_names[]={
  "ok","target-id","target-bus","initial-command","bar-resource","extra-gpu",
@@ -25,7 +26,8 @@ static const char *pny_names[]={
  "enable-extra-bme","enable-other-config","disable-error","restore-other-config",
  "driver-owner","missing-self-owner","extra-self-owner","read-error","entry-ss0",
  "entry-ss1","wrong-vram","warm-state","fwsec-fuse","late-display","final-display",
- "key-ss0","key-ss1","decode-intent-log","decode-restore-log","attributes-get-after"
+  "key-ss0","key-ss1","decode-intent-log","decode-restore-log","attributes-get-after",
+  "bar-return-config-drift","bar-free-config-drift","bar-interface-rebind","bar-free-error"
 };
 static enum pny_fault pf;
 static EFI_PCI_IO_PROTOCOL display_pci;
@@ -33,6 +35,8 @@ static EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL physical_text;
 static UINT8 display_config[256];
 static UINTN memory_enables,memory_disables,display_reads;
 static BOOLEAN pny_injected;
+static VOID *pny_bar_allocation;
+static BOOLEAN pny_bar_returned;
 static const char *mutate_stage;
 static UINT32 mutate_offset,mutate_mask;
 static UINTN writes_at_mutation;
@@ -69,7 +73,7 @@ static EFI_STATUS EFIAPI pny_locate(EFI_LOCATE_SEARCH_TYPE search,EFI_GUID *g,VO
 }
 static EFI_STATUS EFIAPI pny_handle(EFI_HANDLE h,EFI_GUID *g,VOID **p){
  *p=NULL;
- if(guid(g,&pg)){if(h==H(3)||h==H(7))*p=&pci;else if(h==H(4))*p=&display_pci;}
+ if(guid(g,&pg)){if(h==H(3)||h==H(7))*p=pf==P_BAR_REBIND&&pny_bar_returned?&replacement_pci:&pci;else if(h==H(4))*p=&display_pci;}
  else if(guid(g,&gg)){if(h==H(5)||h==H(6))*p=&gops[0];}
  else if(guid(g,&text_guid)){if(h==H(5))*p=&physical_text;else if(h==H(6))*p=&conout;}
  else if(guid(g,&dg)){
@@ -103,9 +107,20 @@ static EFI_STATUS EFIAPI pny_info(EFI_HANDLE h,EFI_GUID *g,EFI_OPEN_PROTOCOL_INF
 }
 static EFI_STATUS EFIAPI pny_bar(EFI_PCI_IO_PROTOCOL *p,UINT8 bar,UINT64 *supports,VOID **resources){
  EFI_STATUS s=bar_info(p,bar,supports,resources);
+ pny_bar_allocation=*resources;pny_bar_returned=TRUE;
  EFI_ACPI_ADDRESS_SPACE_DESCRIPTOR *r=*resources;
  r->AddrRangeMin=GU_BAR0_BASE;r->AddrRangeMax=GU_BAR0_END;
  if(pf==P_BAR)r->AddrTranslationOffset=1;
+ if(pf==P_BAR_RETURN_CONFIG)config[0xc8]^=1;
+ return s;
+}
+static EFI_STATUS EFIAPI pny_free_pool(VOID *memory){
+ BOOLEAN bar=memory==pny_bar_allocation;EFI_STATUS s=app_free_pool(memory);
+ if(bar){
+  pny_bar_allocation=NULL;
+  if(pf==P_BAR_FREE_CONFIG)config[0xc8]^=1;
+  if(pf==P_BAR_FREE_ERROR)return EFI_DEVICE_ERROR;
+ }
  return s;
 }
 static EFI_STATUS EFIAPI pny_attributes(EFI_PCI_IO_PROTOCOL *p,EFI_PCI_IO_PROTOCOL_ATTRIBUTE_OPERATION op,
@@ -172,6 +187,7 @@ static VOID pny_setup(enum app_case mode,enum pny_fault fault){
 #endif
  app_setup(mode);pf=fault;bound=FALSE;
  memory_enables=memory_disables=display_reads=writes_at_mutation=0;pny_injected=FALSE;mutate_stage=NULL;mutate_mask=1;
+ pny_bar_allocation=NULL;pny_bar_returned=FALSE;
  memcpy(config,captured_config,256);fake.pci_attributes=fault==P_ATTR_DIRTY?EFI_PCI_IO_ATTRIBUTE_MEMORY:0;
  if(fault==P_ID)config[0x2c]^=1;
  if(fault==P_COMMAND)config[4]=2;
@@ -184,7 +200,7 @@ static VOID pny_setup(enum app_case mode,enum pny_fault fault){
  if(fault==P_DISPLAY_BAR)display_config[0x13]^=1;
  if(fault==P_DISPLAY_COMMAND)display_config[4]=3;
  display_pci.Pci.Read=pny_read_config;display_pci.Pci.Write=pny_display_write;display_pci.GetLocation=pny_location;
- bs.HandleProtocol=pny_handle;bs.LocateHandleBuffer=pny_locate;bs.OpenProtocolInformation=pny_info;
+ bs.HandleProtocol=pny_handle;bs.LocateHandleBuffer=pny_locate;bs.OpenProtocolInformation=pny_info;bs.FreePool=pny_free_pool;
  pci.Pci.Read=pny_read_config;pci.GetLocation=pny_location;pci.GetBarAttributes=pny_bar;pci.Attributes=pny_attributes;
  files[3].protocol.Write=pny_report;conin.ReadKeyStroke=pny_key;st.StandardErrorHandle=st.ConsoleOutHandle;
  registers[0x1183a4/4]=GU_DEVICE_MEMORY_SIZE;registers[0x8241e0/4]=3; /* Actual RUN0003: version 2, signature offset 768. */

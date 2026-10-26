@@ -5,6 +5,7 @@ Integration and machine-specific port; original research/loader lineage belong t
 | Source | Pin | Use |
 | --- | --- | --- |
 | [impacifist/Windows-GPU-UNLOCK](https://github.com/impacifist/Windows-GPU-UNLOCK/tree/e3f03cd9389195adcabda4743d8fc2922b32498c/internal-boot/unlock) | `e3f03cd9389195adcabda4743d8fc2922b32498c` | Direct Windows UEFI base |
+| [impacifist service-boundary hardening](https://github.com/impacifist/Windows-GPU-UNLOCK/tree/849f99637a0e324161ad6fe12d77f7b668822512) | `849f99637a0e324161ad6fe12d77f7b668822512` | BAR resource lifetime rechecks and pre-release cold-check design review |
 | [rough2515-hub/rtx3080-unlock-public](https://github.com/rough2515-hub/rtx3080-unlock-public/tree/a08254d269af30ace9e57237abd3d8e6c261e8f5) | `a08254d269af30ace9e57237abd3d8e6c261e8f5` | Earlier Windows lineage |
 | [Zagitta/gpu-unlock](https://github.com/Zagitta/gpu-unlock/tree/0ebdb1c6308b6a2072be5bf04513472942541956) | `0ebdb1c6308b6a2072be5bf04513472942541956` | Core unlock/firmware contracts |
 | [WildFlash1st/cmp90hx-unlock](https://github.com/WildFlash1st/cmp90hx-unlock/blob/76940ae583281daa2b883518a2e89b56c11d3a46/driver/patches/cmp90-rejoin15/0014-6104303-cmp90hx-stockflow-rejoin14-multigpu-state.patch) | `76940ae583281daa2b883518a2e89b56c11d3a46` | _kgspCmp90FillV67Signature; GPL2, not MIT |

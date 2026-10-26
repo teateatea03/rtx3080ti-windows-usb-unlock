@@ -6,7 +6,7 @@
       "path": "src/app.c",
       "input_sha256": "0be1c50d5092acd41c91206203e46c5ea037ca60838dff746b3f7efbe4324c9d",
       "output_sha256": "0be1c50d5092acd41c91206203e46c5ea037ca60838dff746b3f7efbe4324c9d",
-      "public_sha256_lf": "6c65cdf0a2a244418a0dd5460e324e4811e06bd74cbbdec0c2980b7bcdd1a5c6"
+      "public_sha256_lf": "96406c0014b4fac386060032124765d6afd30f0356b5224ae36b25ad3a7ed8cc"
     },
     {
       "path": "src/app.h",
@@ -4116,7 +4116,7 @@
       "path": "src/tests/test_pny.c",
       "input_sha256": "f276162966edf0990e8e0968c51d385cccf40932b2d3a3ae549bfdf5e0b0d0c2",
       "output_sha256": "f276162966edf0990e8e0968c51d385cccf40932b2d3a3ae549bfdf5e0b0d0c2",
-      "public_sha256_lf": "4bd017c8cefb99a9ddd3a941168d205c401e0498c9a75918a823ba9add650ec3"
+      "public_sha256_lf": "3a8412ae901bc6e0511d2b93c6e8d4cd7449798ecb713e2865e25482ca560631"
     },
     {
       "path": "src/tests/test_app.c",
@@ -5344,6 +5344,27 @@
         "src/port.h",
         "src/tests/test_pny.c",
         "src/tests/test_pny_selection.py"
+      ]
+    },
+    {
+      "version": "unreleased-service-boundary-hardening",
+      "upstream_design_revision": "849f99637a0e324161ad6fe12d77f7b668822512",
+      "hardware_tested": false,
+      "source_updates": [
+        {
+          "path": "src/app.c",
+          "simulated_source_sha256": "96406c0014b4fac386060032124765d6afd30f0356b5224ae36b25ad3a7ed8cc",
+          "change": "BAR query binds handle, PciIo, BDF and full PCI snapshot across allocation and release callbacks"
+        },
+        {
+          "path": "src/tests/test_pny.c",
+          "simulated_source_sha256": "3a8412ae901bc6e0511d2b93c6e8d4cd7449798ecb713e2865e25482ca560631",
+          "change": "four pre-MMIO service-boundary rejection cases"
+        }
+      ],
+      "public_hashes_updated": [
+        "src/app.c",
+        "src/tests/test_pny.c"
       ]
     }
   ]

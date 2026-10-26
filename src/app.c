@@ -246,17 +246,31 @@ static EFI_STATUS FindTarget(VOID) {
   return ConfigCheck(TRUE);
 #endif
 }
+/* Bind every resource query to the same handle, PciIo interface, BDF and full
+   configuration snapshot. UEFI protocol callbacks may allocate/free buffers or
+   run other firmware code, so success at entry is not authority after return. */
+static EFI_STATUS TargetSnapshot(UINT32 Config[64]) {
+  EFI_PCI_IO_PROTOCOL *current=NULL;UINTN segment,bus,device,function;
+  if(!Gu.bs->HandleProtocol || !Gu.pci || !Gu.pci->GetLocation)return EFI_UNSUPPORTED;
+  EFI_STATUS status=Gu.bs->HandleProtocol(Gu.handle,&PciGuid,(VOID **)&current);
+  if(EFI_ERROR(status))return status;
+  if(current!=Gu.pci)return EFI_NOT_READY;
+  status=Gu.pci->GetLocation(Gu.pci,&segment,&bus,&device,&function);
+  if(EFI_ERROR(status))return status;
+  status=ReadConfig(Config);if(EFI_ERROR(status))return status;
+  return GuTargetConfig(Config,segment,bus,device,function)?EFI_SUCCESS:EFI_UNSUPPORTED;
+}
 static EFI_STATUS BarCheck(VOID) {
-  EFI_ACPI_ADDRESS_SPACE_DESCRIPTOR *r=NULL;
-  EFI_STATUS status=Gu.pci->GetBarAttributes(Gu.pci,0,NULL,(VOID **)&r);
-  GuLog("bar0 query: status=%#llx\n",(unsigned long long)status);
-  if(!EFI_ERROR(status)) {
-    if(r && r->Desc==ACPI_ADDRESS_SPACE_DESCRIPTOR && r->Len==sizeof(*r)-3)
-      GuLog("bar0 descriptor: type=%u granularity=%llu min=%#llx max=%#llx length=%#llx translation=%#llx\n",
-        (unsigned)r->ResType,(unsigned long long)r->AddrSpaceGranularity,(unsigned long long)r->AddrRangeMin,
-        (unsigned long long)r->AddrRangeMax,(unsigned long long)r->AddrLen,(unsigned long long)r->AddrTranslationOffset);
-    if(!r || r->Desc!=ACPI_ADDRESS_SPACE_DESCRIPTOR || r->Len!=sizeof(*r)-3 || r->ResType!=0 ||
-      r->AddrRangeMin!=GU_BAR0_BASE || r->AddrLen!=0x1000000 || r->AddrTranslationOffset ||
+  EFI_ACPI_ADDRESS_SPACE_DESCRIPTOR *r=NULL,copy={0};UINT32 before[64],after[64];
+  BOOLEAN described=FALSE;EFI_STATUS status=TargetSnapshot(before);
+  if(EFI_ERROR(status)){GuLog("bar0 binding precheck: status=%#llx\n",(unsigned long long)status);return status;}
+  EFI_STATUS query;
+  if(!Gu.pci->GetBarAttributes)query=status=EFI_UNSUPPORTED;
+  else query=status=Gu.pci->GetBarAttributes(Gu.pci,0,NULL,(VOID **)&r);
+  if(query==EFI_SUCCESS && r) {
+    copy=*r;described=r->Desc==ACPI_ADDRESS_SPACE_DESCRIPTOR && r->Len==sizeof(*r)-3;
+    if(!described || r->ResType!=0 || r->AddrRangeMin!=GU_BAR0_BASE || r->AddrLen!=0x1000000 ||
+      r->AddrTranslationOffset ||
       /* UEFI describes an inclusive end; pinned EDK2 PciBusDxe instead returns
          PciBar.Alignment. Both representations describe this exact 16 MiB BAR. */
       (r->AddrRangeMax!=GU_BAR0_END && r->AddrRangeMax!=0x00ffffff) ||
@@ -265,10 +279,24 @@ static EFI_STATUS BarCheck(VOID) {
       UINT8 *raw=(UINT8 *)r,sum=0;
       for(UINTN i=0;i<sizeof(*r)+2;i++)sum=(UINT8)(sum+raw[i]);
       if(raw[sizeof(*r)+1] && sum)status=EFI_COMPROMISED_DATA;
-      else {Gu.bar_base=r->AddrRangeMin;Gu.bar_size=r->AddrLen;}
     }
-  }
-  if(r)GuFree(r);return status;
+  } else if(query==EFI_SUCCESS)status=EFI_UNSUPPORTED;
+  EFI_STATUS rebound=TargetSnapshot(after);
+  if(!EFI_ERROR(rebound) && memcmp(before,after,sizeof(before)))rebound=EFI_NOT_READY;
+  if(!EFI_ERROR(status) && EFI_ERROR(rebound))status=rebound;
+  EFI_STATUS released=EFI_SUCCESS;
+  if(r)released=Gu.bs->FreePool(r);
+  if(!EFI_ERROR(status) && EFI_ERROR(released))status=released;
+  EFI_STATUS final=TargetSnapshot(after);
+  if(!EFI_ERROR(final) && memcmp(before,after,sizeof(before)))final=EFI_NOT_READY;
+  if(!EFI_ERROR(status) && EFI_ERROR(final))status=final;
+  GuLog("bar0 query: status=%#llx rebound=%#llx free=%#llx final=%#llx\n",
+    (unsigned long long)query,(unsigned long long)rebound,(unsigned long long)released,(unsigned long long)final);
+  if(described)GuLog("bar0 descriptor: type=%u granularity=%llu min=%#llx max=%#llx length=%#llx translation=%#llx\n",
+    (unsigned)copy.ResType,(unsigned long long)copy.AddrSpaceGranularity,(unsigned long long)copy.AddrRangeMin,
+    (unsigned long long)copy.AddrRangeMax,(unsigned long long)copy.AddrLen,(unsigned long long)copy.AddrTranslationOffset);
+  if(!EFI_ERROR(status)){Gu.bar_base=copy.AddrRangeMin;Gu.bar_size=copy.AddrLen;}
+  return status;
 }
 static EFI_STATUS ColdCheck(VOID) {
   Gu.profile_verified=FALSE;

@@ -8,4 +8,4 @@ if($Prom){
  & $Python (Join-Path $PSScriptRoot 'tools/config_fixture.py')
  if($LASTEXITCODE -ne 0){throw 'Config fixture failed'}
  & (Join-Path $PSScriptRoot 'src/Test-Pny.ps1') -Clang $Clang -Python $Python -VcVars $VcVars -Prom $Prom -Config (Join-Path $PSScriptRoot '.local/config256.bin') -Assets $Assets -DynamicEntrySs0:$DynamicEntrySs0
-}else{'SKIP: 122 static / 221 dynamic fixture scenarios and diagnostic-mode fixture test require the exact private PROM (-Prom).'}
+}else{'SKIP: 126 static / 225 dynamic fixture scenarios and diagnostic-mode fixture test require the exact private PROM (-Prom).'}
