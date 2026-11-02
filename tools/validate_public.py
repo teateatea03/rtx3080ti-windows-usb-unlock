@@ -96,6 +96,21 @@ def main():
     assert publication05["service_boundary"] == {
         "bar_precheck_status": 0, "bar_return_recheck_status": 0,
         "bar_free_status": 0, "bar_final_recheck_status": 0}
+    pci_update = json.loads((ROOT / "evidence/publication-pci-hardening.json").read_text())
+    assert pci_update["status"] == "host-validated-hardware-untested"
+    assert pci_update["hardware_access"] is pci_update["firmware_executed"] is pci_update["physical_usb_updated"] is False
+    assert len(pci_update["builds"]) == 3
+    assert all(b["hardware_unlock_tested"] is False for b in pci_update["builds"])
+    import package_local
+    pins = {"experimental-preserve-ss1": package_local.FIXED_CANDIDATE_EFI,
+            "experimental-dynamic-ss0-preserve-ss1": package_local.DYNAMIC_CANDIDATE_EFI}
+    copier = (ROOT / "tools/Copy-Usb.ps1").read_text()
+    ci = (ROOT / ".github/workflows/host-checks.yml").read_text()
+    for build in pci_update["builds"]:
+        if build["mode"] in pins:
+            assert build["sha256"] == pins[build["mode"]]
+            assert build["sha256"] in copier and build["sha256"] in ci
+        assert build["sha256"] != publication05["efi"]["sha256"]
     for run in (1, 2, 3):
         refused = (ROOT / f"evidence/rejected-run0{run}.txt").read_text()
         assert "stage=diagnostic-cold-state attempted=0 driver_release=0 clean=1" in refused

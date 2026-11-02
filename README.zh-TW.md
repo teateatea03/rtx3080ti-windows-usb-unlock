@@ -34,9 +34,9 @@
 3. [踩坑紀錄](docs/PITFALLS.zh-TW.md)：錯讀 fuse、SS0 變動、EFI Attributes、ROM 格式、事件誤判等。
 4. [實測與限制](docs/RESULTS.md)、[原作者與固定版本](docs/REFERENCES.md)、[授權邊界](THIRD_PARTY_NOTICES.md)。
 
-目前 `main` 的兩個候選皆為 67,072 bytes：固定 SS0 `4fd4143b57acbdbd68e57a3b792bcebcf73f5b48612ea788b47347338c9b1167` 尚未實機執行；動態 SS0 `b04ce9ff5b484c4dd069778ed8102199fbced2db977bef745041793632990844` 已完成 RUN05，UEFI 清理、Windows 兩卡狀態與匹配矩陣效能皆通過。[RUN05 證據與限制](docs/RESULTS.md#current-main-hardening-run05)。
+目前 `main` 已加入 [2026-11-02 上游 PCI 防護更新](docs/UPSTREAM-UPDATE-20261102.md)：固定 SS0 為 67,584 bytes、SHA-256 `b48e0ba917f3004895bcff540bfd9859d8d1ab713d94473fc05a360a52e4586d`；動態 SS0 為 68,096 bytes、SHA-256 `1e220ca0ad40fdada9ee3aca9c229a137208ada2328f0d9e2e38ad4463db5c83`。兩者尚未實機執行。舊動態版 `b04ce9ff5b484c4dd069778ed8102199fbced2db977bef745041793632990844` 的 [RUN05 證據與限制](docs/RESULTS.md#current-main-hardening-run05) 保留。
 
-本機通過動態版 225／固定版 126 個 app/core 模擬情境、預設非寫入案例、9 組通用回歸、32 組編譯限制、診斷 v4 的 60 個情境及 5 個錯誤報告拒絕測試。模擬不等於實機韌體驗證；CI 沒有顯卡與私有 PROM，會明確略過。
+本機通過動態版 225／固定版 126 個 app/core 模擬情境、預設非寫入案例、13 組回歸（通用及 PNY 各含 557 項身分檢查、71 個 PCIe 邊界案例）、32 組編譯限制與 PE 檢查。獨立診斷 v4 另保留先前 60 個情境及 5 個錯誤報告測試紀錄。模擬不等於實機韌體驗證；CI 沒有顯卡與私有 PROM，會明確略過。
 
 **不散布 NVIDIA 韌體、ROM/PROM、CUDA DLL、GPU UUID 或私有識別。** 韌體由腳本在本機取得並核對 SHA-256；release EFI 不是完整映像。原作者著作權與第三方授權保留，沒有付費牆；免費公開不代表可把第三方韌體改授權。
 

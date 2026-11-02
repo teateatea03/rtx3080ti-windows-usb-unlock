@@ -36,7 +36,7 @@ python tools/package_local.py --dynamic-entry-ss0 --assets .local/firmware/asset
 
 X must be the actual USB. Copy defaults to dry run; explicit `-Apply` copies files. Original mode omits the dynamic flag from all four steps. The public copier refuses an existing unlock directory; preserve reports and use another USB. The hardware-tested USB update used a separate private staging script with full payload backups; do not delete logs to bypass the public copier.
 
-225 dynamic / 126 fixed app/core simulations, default rejection, 32 compile selections and nine generic regression groups pass locally; CI has no private PROM/GPU. Current `main` hardened dynamic candidate (67,072 bytes), SHA-256 `b04ce9ff5b484c4dd069778ed8102199fbced2db977bef745041793632990844`, completed RUN05. The tagged v0.2 RUN04 EFI remains `0cf96d7ce5b81b87caf463b6ef4a2365b4785fb6d64273ee38a7d9f699e96845`; each dynamic binary has one successful hardware run.
+225 dynamic / 126 fixed app/core simulations, default rejection, 32 compile selections and 13 regression groups pass locally; CI has no private PROM/GPU. Current `main` PCI hardening candidate is 68,096 bytes, SHA-256 `1e220ca0ad40fdada9ee3aca9c229a137208ada2328f0d9e2e38ad4463db5c83`, and is hardware-untested; see the [backport record](UPSTREAM-UPDATE-20261102.md). The earlier 67,072-byte dynamic hash `b04ce9ff5b484c4dd069778ed8102199fbced2db977bef745041793632990844` completed RUN05. The tagged v0.2 RUN04 EFI remains `0cf96d7ce5b81b87caf463b6ef4a2365b4785fb6d64273ee38a7d9f699e96845`; only those earlier dynamic binaries have one successful hardware run each.
 
 ## 繁體中文摘要與限制
 

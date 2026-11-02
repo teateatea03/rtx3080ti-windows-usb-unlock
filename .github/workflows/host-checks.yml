@@ -33,10 +33,10 @@ jobs:
           .\Build.ps1
           .\Build.ps1 -Experimental
           $efi='src/build/pny3080ti/experimental-preserve-ss1/PNY3080TI.EFI'
-          if((Get-FileHash $efi).Hash -ne '4fd4143b57acbdbd68e57a3b792bcebcf73f5b48612ea788b47347338c9b1167'){throw 'Fixed-SS0 hardening candidate differs from reviewed build'}
+          if((Get-FileHash $efi).Hash -ne 'b48e0ba917f3004895bcff540bfd9859d8d1ab713d94473fc05a360a52e4586d'){throw 'Fixed-SS0 PCI hardening candidate differs from reviewed build'}
           .\Build.ps1 -Experimental -DynamicEntrySs0
           $dynamic='src/build/pny3080ti/experimental-dynamic-ss0-preserve-ss1/PNY3080TI.EFI'
-          if((Get-FileHash $dynamic).Hash -ne 'b04ce9ff5b484c4dd069778ed8102199fbced2db977bef745041793632990844'){throw 'Dynamic-SS0 hardening candidate differs from reviewed build'}
+          if((Get-FileHash $dynamic).Hash -ne '1e220ca0ad40fdada9ee3aca9c229a137208ada2328f0d9e2e38ad4463db5c83'){throw 'Dynamic-SS0 PCI hardening candidate differs from reviewed build'}
       - name: Mocked USB file copy (no physical device)
         shell: powershell
         run: |

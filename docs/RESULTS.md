@@ -2,6 +2,10 @@
 
 See [hardware](../README.md). Original RUN00, dynamic RUN04 and hardened dynamic RUN05 succeeded; RUN01–03 were rejected before unlocking. Publication builds perform no GPU attempt. Original RUN00 and [RUN04](DYNAMIC-SS0.md) evidence remain preserved below.
 
+## Current main PCI hardening candidate
+
+The [2026-11-02 backport](UPSTREAM-UPDATE-20261102.md) changes the current binaries again. All three new modes are hardware-untested. RUN05 below applies only to its recorded earlier EFI hash; its performance and cleanup observations do not qualify the new candidate. The physical USB was not updated by this source change.
+
 ## Current main hardening RUN05
 
 Service-boundary hardening changed the binaries. The 67,072-byte dynamic-SS0 candidate `b04ce9ff5b484c4dd069778ed8102199fbced2db977bef745041793632990844` completed [RUN05](../evidence/unlock-run05.txt); the fixed-SS0 and diagnostic-only candidates remain hardware-untested.

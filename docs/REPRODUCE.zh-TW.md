@@ -1,6 +1,6 @@
 # 從原始碼重現整套流程
 
-**v0.2：**下列命令保留原版兩值模式。新版動態模式請依 [動態重現步驟](DYNAMIC-SS0.md)，測試／建置／封裝／複製皆明確加對應選項。目前原版122、動態221情境與32組編譯檢查；歷史v0.1為119／23。
+**v0.2：**下列命令保留原版兩值模式。動態模式請依 [動態重現步驟](DYNAMIC-SS0.md)，測試／建置／封裝／複製皆明確加對應選項。目前原版126、動態225情境與32組編譯檢查；歷史v0.1為119／23。[目前 PCI 防護候選](UPSTREAM-UPDATE-20261102.md) 尚未實機執行。
 
 [English 詳細參數](REPRODUCE.md) · [踩坑](PITFALLS.zh-TW.md) · [程式架構](ARCHITECTURE.md)
 
@@ -23,7 +23,7 @@ lld-link --version
 .\Build.ps1
 ~~~
 
-這些只在主機編譯／模擬，不會碰 GPU。第一個跑 9 組回歸與 32 組編譯限制，未提供 `-Prom` 會明確略過固定版 126／動態版 225 情境與 fixture 預設模式測試。第二個建置獨立診斷 v4、跑 60 情境與 5 種錯誤報告。預設 Build 產物是 `src/build/pny3080ti/diagnostic-only/PNY3080TI.EFI`，無法 arm GPU 寫入／DMA／reset；它與獨立診斷 v4 不同，執行時仍需相同 app 資料目錄。
+這些只在主機編譯／模擬，不會碰 GPU。第一個跑 13 組回歸與 32 組編譯限制，未提供 `-Prom` 會明確略過固定版 126／動態版 225 情境與 fixture 預設模式測試。第二個建置獨立診斷 v4、跑 60 情境與 5 種錯誤報告。預設 Build 產物是 `src/build/pny3080ti/diagnostic-only/PNY3080TI.EFI`，無法 arm GPU 寫入／DMA／reset；它與獨立診斷 v4 不同，執行時仍需相同 app 資料目錄。
 
 ## 2. 診斷 v4 與私人擷取
 
@@ -68,7 +68,7 @@ PROM 雜湊綁定本案實測卡，不符就調查，不要改雜湊強迫過關
 .\Build.ps1 -Experimental
 ~~~
 
-目前 `main` 預期固定版 126 個 app/core 模擬情境，另驗預設拒絕寫入。強化後固定 SS0 候選應為 67,072 bytes、SHA-256 `4fd4143b57acbdbd68e57a3b792bcebcf73f5b48612ea788b47347338c9b1167`。PE 檢查排除 imports、可寫又可執行區段；本候選尚未實機執行，較早 66,048-byte hash 屬於 RUN00 時期標籤版本。
+目前 `main` 預期固定版 126 個 app/core 模擬情境，另驗預設拒絕寫入。PCI 強化後固定 SS0 候選應為 67,584 bytes、SHA-256 `b48e0ba917f3004895bcff540bfd9859d8d1ab713d94473fc05a360a52e4586d`。PE 檢查排除 imports、可寫又可執行區段；本候選尚未實機執行，舊版雜湊與實機證據保留於 [實測紀錄](RESULTS.md)。
 
 ## 5. 本機 USB 資料樹
 

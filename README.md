@@ -47,9 +47,9 @@ Source, licenses, redacted measured evidence and reproduction scripts are public
 
 ## Validation and source
 
-Current `main` builds 67,072-byte candidates: fixed SS0 `4fd4143b57acbdbd68e57a3b792bcebcf73f5b48612ea788b47347338c9b1167` remains hardware-untested; dynamic SS0 `b04ce9ff5b484c4dd069778ed8102199fbced2db977bef745041793632990844` completed RUN05 with clean UEFI containment, both Windows display devices OK and matched matrix throughput. [RUN05 evidence and limits](docs/RESULTS.md#current-main-hardening-run05).
+Current `main` includes the [2026-11-02 PCI hardening backport](docs/UPSTREAM-UPDATE-20261102.md). Fixed SS0 builds 67,584 bytes (`b48e0ba917f3004895bcff540bfd9859d8d1ab713d94473fc05a360a52e4586d`); dynamic SS0 builds 68,096 bytes (`1e220ca0ad40fdada9ee3aca9c229a137208ada2328f0d9e2e38ad4463db5c83`). Both are hardware-untested. The earlier dynamic hash `b04ce9ff5b484c4dd069778ed8102199fbced2db977bef745041793632990844` retains its [RUN05 evidence and limits](docs/RESULTS.md#current-main-hardening-run05).
 
-Local validation: 225 dynamic / 126 fixed simulated app/core scenarios plus non-writing default cases; 9 fixture-independent regression groups; 32 compile-policy cases; diagnostic v4 60 scenarios and 5 invalid-report cases; PE checks and offline firmware reconstruction. CI has no GPU or private PROM and explicitly skips fixture-dependent tests. Host tests cannot prove firmware authentication or hardware behavior.
+Local validation: 225 dynamic / 126 fixed simulated app/core scenarios plus non-writing default cases; 13 fixture-independent regression groups (including 557 identity assertions and 71 PCIe layout cases for each of generic/PNY profiles); 32 compile-policy cases; PE checks. Independent diagnostic v4 retains its separately recorded 60 scenarios and 5 invalid-report cases. CI has no GPU or private PROM and explicitly skips fixture-dependent tests. Host tests cannot prove firmware authentication or hardware behavior.
 
 This port builds on impacifist, rough2515-hub, Zagitta and WildFlash1st. See [pinned references](docs/REFERENCES.md), [licenses](THIRD_PARTY_NOTICES.md), [changes](docs/CHANGES-PNY.md). Original authors retain copyrights. There is no fee/paywall; GPL permits commercial redistribution under its conditions.
 

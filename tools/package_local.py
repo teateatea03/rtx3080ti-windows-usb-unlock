@@ -6,8 +6,8 @@ import json
 import shutil
 
 ROOT = Path(__file__).resolve().parents[1]
-FIXED_CANDIDATE_EFI = "4fd4143b57acbdbd68e57a3b792bcebcf73f5b48612ea788b47347338c9b1167"
-DYNAMIC_CANDIDATE_EFI = "b04ce9ff5b484c4dd069778ed8102199fbced2db977bef745041793632990844"
+FIXED_CANDIDATE_EFI = "b48e0ba917f3004895bcff540bfd9859d8d1ab713d94473fc05a360a52e4586d"
+DYNAMIC_CANDIDATE_EFI = "1e220ca0ad40fdada9ee3aca9c229a137208ada2328f0d9e2e38ad4463db5c83"
 PROM = "991cbe4878a4c6f0456b6412ffff3dab5e7f60ec317ba4539254eb52b692f140"
 
 def digest(path):
@@ -78,7 +78,7 @@ def main():
     files = sorted(p for p in out.rglob("*") if p.is_file())
     (out / "SHA256SUMS.txt").write_text("".join(
         f"{digest(p)}  {p.relative_to(out).as_posix()}\n" for p in files), encoding="ascii")
-    status = "RUN05 hardware evidence exists for this dynamic hash" if a.dynamic_entry_ss0 else "fixed-SS0 hardware execution remains untested"
+    status = "PCI hardening candidate; hardware execution remains untested"
     print(f"Local hardening-candidate bundle verified; {status}. Contains separately licensed firmware; DO NOT upload this directory.")
 
 if __name__ == "__main__":

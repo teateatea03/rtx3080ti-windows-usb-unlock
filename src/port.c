@@ -1,4 +1,4 @@
-/* Modified 2026-10-25: PNY/B550 manual USB port; see docs/CHANGES-PNY.md. */ /* Modified 2026-10-19/20 for Windows GPU UNLOCK; changes documented in CHANGES.md. */ #include "port.h"
+/* Modified 2026-11-02: PCIe save bounds; see docs/CHANGES-PNY.md. */ /* Modified 2026-10-25: PNY/B550 manual USB port; see docs/CHANGES-PNY.md. */ /* Modified 2026-10-19/20 for Windows GPU UNLOCK; changes documented in CHANGES.md. */ #include "port.h"
 VOID *memset(VOID *, int, size_t);
 VOID *memcpy(VOID *, const VOID *, size_t);
 GU_PLATFORM Gu;
@@ -261,7 +261,11 @@ fail:
 }
 EFI_STATUS GuSavePci(VOID) {
   UINTN I;
-  if(Gu.saved || Gu.fault || !Gu.owned || Gu.pcie_cap<0x40 || Gu.pcie_cap>0xd4)return EFI_NOT_READY;
+  /* Match the validated v1 (0x14 bytes) and v2 (0x3c bytes) layouts.
+   * Reject unknown versions and invalid offsets before device access. */
+  if(Gu.saved || Gu.fault || !Gu.owned || Gu.pcie_cap<0x40 || (Gu.pcie_cap&3U) ||
+     (Gu.pcie_version!=1 && Gu.pcie_version!=2) ||
+     Gu.pcie_cap>(Gu.pcie_version==1?0xecU:0xc4U))return EFI_NOT_READY;
   for(I=0;I<64;I++)
     if(EFI_ERROR(GuConfigRead(EfiPciIoWidthUint32,(UINT32)I*4,&Gu.saved_config[I])))return EFI_DEVICE_ERROR;
   if(Gu.saved_config[0]!=GU_BOARD_ID || Gu.saved_config[11]!=GU_BOARD_SUBSYSTEM ||

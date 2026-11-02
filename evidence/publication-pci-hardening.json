@@ -1,0 +1,32 @@
+{
+  "status": "host-validated-hardware-untested",
+  "date": "2026-11-02",
+  "hardware_access": false,
+  "firmware_executed": false,
+  "physical_usb_updated": false,
+  "compiler": "Clang/LLD 20.1.8",
+  "upstream_commits": [
+    "d3bb696f1f592760416f1a83fa7124eccb495083",
+    "96924633c2017c8becda9701fd3267121d6330f7"
+  ],
+  "builds": [
+    {"mode": "experimental-preserve-ss1", "bytes": 67584, "sha256": "b48e0ba917f3004895bcff540bfd9859d8d1ab713d94473fc05a360a52e4586d", "hardware_unlock_tested": false},
+    {"mode": "experimental-dynamic-ss0-preserve-ss1", "bytes": 68096, "sha256": "1e220ca0ad40fdada9ee3aca9c229a137208ada2328f0d9e2e38ad4463db5c83", "hardware_unlock_tested": false},
+    {"mode": "diagnostic-only", "bytes": 56832, "sha256": "6b239f42b7ec665380f5d6bbb557c114c56eb7b0cca35e953bbc3f841249fb70", "hardware_unlock_tested": false}
+  ],
+  "tests": {
+    "regression_groups": 13,
+    "compile_policy_cases": 32,
+    "generic_identity_assertions": 557,
+    "pny_identity_assertions": 557,
+    "generic_layout_cases": 71,
+    "pny_layout_cases": 71,
+    "fixed_app_core_scenarios": 126,
+    "dynamic_app_core_scenarios": 225,
+    "default_refusal_passed_both_modes": true,
+    "fixed_log_sha256": "b3274255cbc6a635eb533dbe5ac886a7471362eb51b53fa388b9f9975f1f7982",
+    "dynamic_log_sha256": "8eb4099d9684b27e1f5b4cedf80021a7aac77759ddecf39bee5004ee4aa47231"
+  },
+  "earlier_hardware_evidence": "evidence/publication-hardening-run05.json",
+  "selected_test_output": "evidence/pci-hardening-tests.txt"
+}

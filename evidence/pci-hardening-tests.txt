@@ -1,0 +1,9 @@
+Selected native Windows host output, 2026-11-02; no hardware access.
+generic: PASS 71 PCI layout boundary/FLR/restore cases; RAM-only mocks, no GPU access
+generic: PASS 557 fresh PCI identity assertions; actual ownership/port code, RAM-only
+PNY: PASS 71 PCI layout boundary/FLR/restore cases; RAM-only mocks, no GPU access
+PNY: PASS 557 fresh PCI identity assertions; actual ownership/port code, RAM-only
+PASS 32 production selection/default/legacy compile cases; no hardware access
+126 PNY actual app/core scenarios passed; all hardware and firmware execution SIMULATED.
+225 PNY actual app/core scenarios passed; all hardware and firmware execution SIMULATED.
+Both full suites: PNY default diagnostic: actual app rejected before any PCI/MMIO write, DMA, ownership or input PASS

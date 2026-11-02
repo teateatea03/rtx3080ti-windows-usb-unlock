@@ -20,6 +20,10 @@ try {
  $jobs=@(
   @{Name='config-path';Sources=@('tests/test_generic_checks.c','checks.c');Defines=@()},
   @{Name='port';Sources=@('tests/test_port.c','port.c');Defines=@('-DGU_HOST_WRITE_TEST')},
+   @{Name='pci-layout';Sources=@('tests/test_pci_layout.c','checks.c','port.c');Defines=@('-DGU_HOST_WRITE_TEST')},
+   @{Name='fresh-pci-identity';Sources=@('tests/test_refresh_identity.c','ownership.c','port.c');Defines=@('-DGU_HOST_WRITE_TEST')},
+   @{Name='pny-pci-layout';Sources=@('tests/test_pci_layout.c','checks.c','port.c');Defines=@('-DGU_HOST_WRITE_TEST','-DGU_PROFILE_PNY_B550_3080TI','-DGU_TARGET_PCI_ID=0x220810deU')},
+   @{Name='pny-fresh-pci-identity';Sources=@('tests/test_refresh_identity.c','ownership.c','port.c');Defines=@('-DGU_HOST_WRITE_TEST','-DGU_PROFILE_PNY_B550_3080TI','-DGU_TARGET_PCI_ID=0x220810deU')},
   @{Name='write-lock';Sources=@('tests/test_preflight_lock.c','port.c');Defines=@()},
   @{Name='master-attributes';Sources=@('tests/test_master_attributes.c')+$core;Defines=@('-D__KERNEL__','-DGU_UEFI_PORT','-DGU_TARGET_PCI_ID=0x220410deU','-DGU_HOST_WRITE_TEST')},
   @{Name='runtime';Sources=@('tests/test_runtime.c','format.c',"$out/runtime-host.obj");Defines=@('-fno-builtin')}

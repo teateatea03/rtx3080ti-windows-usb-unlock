@@ -1,6 +1,6 @@
 # Reproduce, build and prepare locally
 
-**v0.2:** the commands below preserve the original two-value mode. For the newly released dynamic mode use the matching explicit test/build/package/copy flags in [dynamic reproduction](DYNAMIC-SS0.md). Current original tests:122 cases, dynamic:221; compile-policy:32. The historical v0.1 count was119/23.
+**v0.2:** the commands below preserve the original two-value mode. For dynamic mode use the matching explicit test/build/package/copy flags in [dynamic reproduction](DYNAMIC-SS0.md). Current original tests:126 cases, dynamic:225; compile-policy:32. The historical v0.1 count was119/23. The [current PCI hardening candidates](UPSTREAM-UPDATE-20261102.md) remain hardware-untested.
 
 [繁體中文](REPRODUCE.zh-TW.md) · [Pitfalls](PITFALLS.md) · [Architecture](ARCHITECTURE.md)
 
@@ -23,7 +23,7 @@ lld-link --version
 .\Build.ps1
 ~~~
 
-These are host builds/tests, not GPU execution. Test.ps1 runs 9 generic groups and 32 compile cases; without `-Prom` it explicitly skips 126 fixed / 225 dynamic fixture scenarios and the fixture-dependent default-mode test. Test-Diagnostic builds/checks v4, runs 60 scenarios and 5 invalid-report cases. Default Build creates `src/build/pny3080ti/diagnostic-only/PNY3080TI.EFI`; it cannot arm GPU writes/DMA/reset. It differs from the independent v4 inventory probe, and needs the same app data tree to run.
+These are host builds/tests, not GPU execution. Test.ps1 runs 13 regression groups and 32 compile cases; without `-Prom` it explicitly skips 126 fixed / 225 dynamic fixture scenarios and the fixture-dependent default-mode test. Test-Diagnostic builds/checks v4, runs 60 scenarios and 5 invalid-report cases. Default Build creates `src/build/pny3080ti/diagnostic-only/PNY3080TI.EFI`; it cannot arm GPU writes/DMA/reset. It differs from the independent v4 inventory probe, and needs the same app data tree to run.
 
 ## 2. Independent diagnostic v4 and private evidence
 
@@ -68,7 +68,7 @@ The PROM hash is deliberately pinned to the measured card. If yours differs, sto
 .\Build.ps1 -Experimental
 ~~~
 
-Expected on current `main`: 126 fixed-mode app/core scenarios (simulated) plus the default-mode rejection case. The hardened fixed-SS0 candidate must be 67,072 bytes and hash `4fd4143b57acbdbd68e57a3b792bcebcf73f5b48612ea788b47347338c9b1167`. PE verification rejects imports and writable/executable sections. This candidate is not hardware-tested; the older 66,048-byte hash belongs to the tagged RUN00-era build.
+Expected on current `main`: 126 fixed-mode app/core scenarios (simulated) plus the default-mode rejection case. The PCI-hardened fixed-SS0 candidate must be 67,584 bytes and hash `b48e0ba917f3004895bcff540bfd9859d8d1ab713d94473fc05a360a52e4586d`. PE verification rejects imports and writable/executable sections. This candidate is not hardware-tested; older builds and their hardware evidence are documented in [results](RESULTS.md).
 
 ## 5. Local USB file bundle
 

@@ -3,6 +3,21 @@
   "CoreUpstreamRevision": "0ebdb1c6308b6a2072be5bf04513472942541956",
   "files": [
     {
+      "path": "src/tests/test_refresh_identity.c",
+      "upstream_revision": "d3bb696f1f592760416f1a83fa7124eccb495083",
+      "upstream_path": "internal-boot/unlock/tests/test_refresh_identity.c",
+      "upstream_blob_sha1": "24bd2dd7623e99ae2ea78c582f298207ebe17d88",
+      "adaptation": "Fixed segment zero and dated modification notice",
+      "public_sha256_lf": "013da93b7594967881d29ef4dfec9ac19369e2d6889c7bc5bd6454c714c2d8ae"
+    },
+    {
+      "path": "src/tests/test_pci_layout.c",
+      "upstream_revision": "96924633c2017c8becda9701fd3267121d6330f7",
+      "upstream_path": "internal-boot/unlock/tests/test_pci_layout.c",
+      "upstream_blob_sha1": "eb1ad92553bc2a879204e198500ea32b7c62bf24",
+      "public_sha256_lf": "14ec854a83215d126beb1f5ff5f6028e1519afdb499c3e949033c4d9f65867eb"
+    },
+    {
       "path": "src/app.c",
       "input_sha256": "0be1c50d5092acd41c91206203e46c5ea037ca60838dff746b3f7efbe4324c9d",
       "output_sha256": "0be1c50d5092acd41c91206203e46c5ea037ca60838dff746b3f7efbe4324c9d",
@@ -66,7 +81,7 @@
       "path": "src/ownership.c",
       "input_sha256": "b2fb94d2e015d0fbc24ab2eb16d797181f8e1d98016f9cb9e58b71db51fcf85c",
       "output_sha256": "b2fb94d2e015d0fbc24ab2eb16d797181f8e1d98016f9cb9e58b71db51fcf85c",
-      "public_sha256_lf": "504ea30a50904650f2d6d72c47ec3d47ce08cc661f534b5938eb6f866f4ba8e7"
+      "public_sha256_lf": "e61848173ce5691567fdab01c58f680e076fdce5288c5698a739a62a4c1f70f8"
     },
     {
       "path": "src/ownership.h",
@@ -84,7 +99,7 @@
       "path": "src/port.c",
       "input_sha256": "6eb7a5c1f14253be22ad39020908deb8e4d5f1bce8f06a693af0f0522bec6d8e",
       "output_sha256": "6eb7a5c1f14253be22ad39020908deb8e4d5f1bce8f06a693af0f0522bec6d8e",
-      "public_sha256_lf": "aec9bd3bc98ba64c6ff59ba8c442ec9a03273084bffbecf9c4d82f6f9bb7c96a"
+      "public_sha256_lf": "f043c10c04ec00b75d6842409e1151e61869a4e3ed84d2f781776f8160a5351b"
     },
     {
       "path": "src/port.h",
@@ -4146,7 +4161,7 @@
       "path": "src/tests/test_port.c",
       "input_sha256": "c45b6da087e3bb3c97cd86bd8d8b0f13457e2c09b7447299d057a67b726b9140",
       "output_sha256": "c45b6da087e3bb3c97cd86bd8d8b0f13457e2c09b7447299d057a67b726b9140",
-      "public_sha256_lf": "b75358104b3ea4e45271c97e9d758517adcfb2ea44cd85a55265dd32488cbee1"
+      "public_sha256_lf": "8711434cc1658ee9ba7f32012b4bdad9535d39a6170ec50b6637e5740cace193"
     },
     {
       "path": "src/tests/test_preflight_lock.c",
@@ -4230,7 +4245,7 @@
       "path": "CHANGES.md",
       "input_sha256": "092188e36cd4743e2f7ad7ce526be90c964a6112f16d77c2829244fda4a26736",
       "output_sha256": "092188e36cd4743e2f7ad7ce526be90c964a6112f16d77c2829244fda4a26736",
-      "public_sha256_lf": "092188e36cd4743e2f7ad7ce526be90c964a6112f16d77c2829244fda4a26736"
+      "public_sha256_lf": "fc8900d4f2bcff6e68f6d3be604887550035d368ed86f74594d1b00b4b6cabf7"
     },
     {
       "path": "diagnostics/v1/src/diagnostic.c",
@@ -5309,6 +5324,29 @@
   ],
   "hash_scope": "input_sha256: private local source bytes; output_sha256: initial export bytes; public_sha256_lf: final public text with CRLF normalized to LF. Input is not asserted pristine upstream.",
   "local_revision_updates": [
+    {
+      "version": "unreleased-pci-hardening-20261102",
+      "upstream_design_revisions": [
+        "d3bb696f1f592760416f1a83fa7124eccb495083",
+        "96924633c2017c8becda9701fd3267121d6330f7"
+      ],
+      "hardware_evidence": {
+        "dynamic_ss0_tested": false,
+        "fixed_ss0_tested": false,
+        "diagnostic_only_tested": false,
+        "validation_receipt": "evidence/publication-pci-hardening.json"
+      },
+      "public_hashes_updated": [
+        "src/ownership.c",
+        "src/port.c",
+        "src/tests/test_port.c",
+        "CHANGES.md"
+      ],
+      "new_upstream_test_imports": [
+        "src/tests/test_refresh_identity.c",
+        "src/tests/test_pci_layout.c"
+      ]
+    },
     {
       "version": "v0.2.0-experimental",
       "source_updates": [

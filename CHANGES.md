@@ -1,5 +1,11 @@
 # Changes
 
+## 2026-11-02 — PNY PCI hardening backport (hardware-untested)
+
+- Reject incomplete, warning, reentrant or changing PCI identity refresh callbacks; keep failed targets unavailable.
+- Bound PCIe saves to aligned known v1/v2 layouts before device access.
+- Add generic/PNY RAM-only regression suites and update build/package/copy hash pins. Preserve earlier RUN05 evidence and manual USB opt-in flow. See [port update](docs/UPSTREAM-UPDATE-20261102.md).
+
 ## 2026-10-24 — v0.3.1 variable headless display-child discovery
 
 - Fixed preflight rejection when ASUS firmware exposes three RTX display

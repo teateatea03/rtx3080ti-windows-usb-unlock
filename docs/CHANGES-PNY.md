@@ -1,5 +1,9 @@
 # PNY port changes, 2026-10-25
 
+## 2026-11-02 PCI hardening backport
+
+Port upstream `d3bb696f1f592760416f1a83fa7124eccb495083` identity-refresh guards and `96924633c2017c8becda9701fd3267121d6330f7` version-specific PCIe save bounds. Add upstream RAM-only identity/layout suites for both generic and exact PNY identities, adapting the identity suite to this port's fixed segment zero. [Changes, candidate hashes and limits](UPSTREAM-UPDATE-20261102.md). New binaries remain hardware-untested; RUN05 below belongs to the earlier service-boundary build.
+
 Direct base: impacifist/Windows-GPU-UNLOCK `e3f03cd9389195adcabda4743d8fc2922b32498c`, `internal-boot/unlock/`. Original notices and copyrights retained; no claim to discovery.
 
 - Add PNY 12GB/B550/5080 profile with measured config/BAR/PROM/cold-state guards.
